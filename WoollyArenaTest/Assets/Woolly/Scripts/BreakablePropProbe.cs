@@ -1,0 +1,8 @@
+using UnityEngine;using System.Collections;using System.Collections.Generic;using System.IO;using System.Linq;
+namespace WoollyArena {
+public sealed class BreakablePropProbe:MonoBehaviour {
+ IEnumerator Start(){var p=GetComponent<ArenaPlayer>();var cc=GetComponent<CharacterController>();var original=transform.position;var originalLocations=new List<Vector3>();var lines=new List<string>();var props=Object.FindObjectsByType<BreakableProp>(FindObjectsSortMode.None).GroupBy(x=>x.maxHealth).Select(g=>g.First()).OrderBy(x=>x.maxHealth).ToArray();p.SimulatedInput=true;p.TestMove=Vector2.zero;p.TestAim=Vector2.up;
+ foreach(var prop in props){prop.transform.position=new Vector3(0,0,0);Physics.SyncTransforms();cc.enabled=false;transform.position=prop.transform.position+new Vector3(0,.05f,-3);cc.enabled=true;p.weapon=new WeaponState();yield return new WaitForSeconds(.25f);p.TestFire=true;yield return new WaitForSeconds(.12f);p.TestFire=false;lines.Add((prop.Health==prop.maxHealth-25?"PASS ":"FAIL ")+prop.name+" raycast damage");yield return new WaitForSeconds(.2f);p.TestFire=true;yield return new WaitForSeconds(prop.maxHealth==75?.43f:.13f);p.TestFire=false;lines.Add((prop.Broken&&!prop.GetComponent<Collider>().enabled&&!prop.artwork.enabled?"PASS ":"FAIL ")+prop.name+" breaks and clears collider");lines.Add((prop.dust.particleCount>0&&prop.fragments.particleCount>0?"PASS ":"FAIL ")+prop.name+" dust and debris");yield return new WaitForSeconds(2);lines.Add((!prop?"PASS ":"FAIL ")+"destroyed prop cleanup");}
+ p.TestFire=false;p.SimulatedInput=false;cc.enabled=false;transform.position=original;cc.enabled=true;File.WriteAllLines(Path.Combine(Application.dataPath,"../Logs/breakable-tests.txt"),lines);Destroy(this);}
+}
+}

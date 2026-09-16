@@ -1,0 +1,6 @@
+using UnityEngine;using System.Collections;using System.IO;
+namespace WoollyArena {
+public sealed class PresentationProbe:MonoBehaviour {
+ IEnumerator Start(){var p=GetComponent<ArenaPlayer>();var d=GetComponent<FootstepDust>();var v=GetComponent<CharacterVitals>();var b=GetComponentInChildren<CharacterBillboard>();p.SimulatedInput=true;p.TestAim=Vector2.down;p.TestMove=Vector2.down;p.TestRun=true;int before=d.Bursts;yield return new WaitForSeconds(.85f);bool steps=d.Bursts>before;bool visible=d.dust.particleCount>0;p.TestMove=Vector2.zero;yield return new WaitForSeconds(.4f);int stopped=d.Bursts;yield return new WaitForSeconds(.6f);bool idle=d.Bursts==stopped&&d.dust.particleCount==0;v.Damage(750);yield return null;bool health=v.Health==2250&&Mathf.Abs(b.healthFill.anchorMax.x-.75f)<.001f;v.Heal(10000);yield return null;bool clamp=v.Health==3000&&b.healthLabel.text=="3000";File.WriteAllText(Path.Combine(Application.dataPath,"../Logs/presentation-tests.txt"),$"{(steps?"PASS":"FAIL")} foot contacts emit dust\n{(visible?"PASS":"FAIL")} live dust particles while running\n{(idle?"PASS":"FAIL")} no dust when idle, particles fade\n{(health?"PASS":"FAIL")} health damage updates bar to 75%\n{(clamp?"PASS":"FAIL")} healing capped at max health\n");p.SimulatedInput=false;Destroy(this);}
+}
+}
