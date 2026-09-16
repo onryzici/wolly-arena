@@ -1,5 +1,5 @@
 Shader "Woolly/WarmCharacter" {
-Properties { _BaseColor("Tint",Color)=(1,1,1,1) _BaseMap("Character texture",2D)="white" {} }
+Properties { _BaseColor("Tint",Color)=(1,1,1,1) _BaseMap("Character texture",2D)="white" {} _HitFlash("Hit flash",Range(0,1))=0 }
 SubShader {Tags {"RenderPipeline"="UniversalPipeline" "RenderType"="Opaque"}
 Pass {Name "Forward" Tags {"LightMode"="UniversalForward"}
 HLSLPROGRAM
@@ -10,7 +10,7 @@ HLSLPROGRAM
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 CBUFFER_START(UnityPerMaterial)
-half4 _BaseColor;float4 _BaseMap_ST;
+half4 _BaseColor;float4 _BaseMap_ST;half _HitFlash;
 CBUFFER_END
 TEXTURE2D(_BaseMap);SAMPLER(sampler_BaseMap);
 struct A {float4 p:POSITION;float3 n:NORMAL;float2 uv:TEXCOORD0;};
@@ -26,7 +26,8 @@ half4 frag(V i):SV_Target {
  // Lift dark leather slightly into warm charcoal without losing silhouette contrast.
  half dark=1-smoothstep(.12,.32,mx);c=lerp(c,c*half3(1.12,1.04,.96)+half3(.025,.018,.012),dark*.65);
  Light l=GetMainLight(TransformWorldToShadowCoord(i.world));half diffuse=.8+.2*smoothstep(-.2,.8,dot(normalize(i.normal),l.direction));
- return half4(SRGBToLinear(saturate(c))*_BaseColor.rgb*diffuse*lerp(half3(.76,.65,.58),half3(1,1,1),l.shadowAttenuation),1);
+ half3 shaded=SRGBToLinear(saturate(c))*_BaseColor.rgb*diffuse*lerp(half3(.76,.65,.58),half3(1,1,1),l.shadowAttenuation);
+ return half4(lerp(shaded,half3(1,.94,.76),saturate(_HitFlash)*.94h),1);
 }
 ENDHLSL
 }

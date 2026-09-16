@@ -22,9 +22,24 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
+    m_TexEnvs:
+    - _Backdrop:
+        m_Texture: {fileID: 2800000, guid: afd8eedd8e92d52469344195de764b8c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Foreground:
+        m_Texture: {fileID: 2800000, guid: 916e9e88b4024a34495af5c6c946287c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Landscape:
+        m_Texture: {fileID: 2800000, guid: dda9b64dc7809364986a3a12d5a9701e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _CompositionScale: 1
+    - _GroundY: 0.278
+    - _VerticalOffset: 0
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

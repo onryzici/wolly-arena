@@ -6,6 +6,11 @@ public sealed class ArenaPlayer:MonoBehaviour {
  public Transform visual,muzzle; public Animator animator; public Camera view; public ShotEffects effects;
  public float walkSpeed=1.08f,runSpeed=3.36f,acceleration=15,turnSpeed=720,range=25;
  public MobileControls mobile;
+ public float hitPushDistance=.16f;
+ HitReaction hitReaction;
+ public DodgeAbility Dodge {get;private set;}
+ public bool CanDodge=>Dodge&&Dodge.Ready&&vitals&&vitals.Health>0&&motor&&motor.enabled&&motor.isGrounded;
+ bool dodgeRequested;
  public WeaponState weapon=new WeaponState();
  public int Hits {get;private set;} public float Speed {get;private set;} public Vector3 AimPoint {get;private set;}
  public bool SimulatedInput; public Vector2 TestMove,TestAim; public bool TestRun,TestFire;
@@ -13,13 +18,17 @@ public sealed class ArenaPlayer:MonoBehaviour {
  CharacterVitals vitals;Vector3 spawnPosition;float respawnAt=-1;Vector3 lastMoveDirection;bool pendingShot;
  Transform hips,spine;float legYaw;float playback=1;
  static readonly int SpeedId=Animator.StringToHash("Speed"),FireId=Animator.StringToHash("Fire");
- void Awake(){motor=GetComponent<CharacterController>();vitals=GetComponent<CharacterVitals>();spawnPosition=transform.position;lastMoveDirection=visual.forward;if(!view)view=Camera.main;foreach(var t in visual.GetComponentsInChildren<Transform>()){if(t.name=="mixamorig:Hips")hips=t;if(t.name=="mixamorig:Spine")spine=t;}}
+ void Awake(){motor=GetComponent<CharacterController>();vitals=GetComponent<CharacterVitals>();spawnPosition=transform.position;lastMoveDirection=visual.forward;if(!view)view=Camera.main;foreach(var t in visual.GetComponentsInChildren<Transform>()){if(t.name=="mixamorig:Hips")hips=t;if(t.name=="mixamorig:Spine")spine=t;}hitReaction=gameObject.AddComponent<HitReaction>();visual=hitReaction.Initialize(visual,vitals,hitPushDistance);Dodge=GetComponent<DodgeAbility>();if(!Dodge)Dodge=gameObject.AddComponent<DodgeAbility>();Dodge.Initialize(this,vitals,hitReaction);}
+ public bool RequestDodge(){if(!CanDodge)return false;dodgeRequested=true;return true;}
+ void OnApplicationFocus(bool focused){if(!focused)dodgeRequested=false;}
+ void OnApplicationPause(bool paused){if(paused)dodgeRequested=false;}
+ void OnDisable(){dodgeRequested=false;pendingShot=false;if(Dodge)Dodge.ResetAbility();}
  public static Vector2 ClampInput(Vector2 input)=>Vector2.ClampMagnitude(input,1);
  void Update(){
   if(vitals&&vitals.Health==0){
-   velocity=Vector3.zero;Speed=0;animator.SetFloat(SpeedId,0);
+   velocity=Vector3.zero;Speed=0;pendingShot=false;dodgeRequested=false;Dodge.ResetAbility();animator.SetFloat(SpeedId,0);
    if(respawnAt<0)respawnAt=Time.time+2;
-   if(Time.time>=respawnAt){motor.enabled=false;transform.position=spawnPosition;motor.enabled=true;gravity=0;vitals.Heal(vitals.maxHealth);vitals.ProtectFor(2);weapon=new WeaponState();respawnAt=-1;if(mobile){mobile.move.ResetInput();mobile.aim.ResetInput();}}
+   if(Time.time>=respawnAt){motor.enabled=false;transform.position=spawnPosition;motor.enabled=true;gravity=0;hitReaction.ResetReaction();vitals.Heal(vitals.maxHealth);vitals.ProtectFor(2);weapon=new WeaponState();respawnAt=-1;if(mobile){mobile.move.ResetInput();mobile.aim.ResetInput();}}
    return;
   }
   var k=Keyboard.current;var mouse=Mouse.current;
@@ -29,22 +38,27 @@ public sealed class ArenaPlayer:MonoBehaviour {
   if(!SimulatedInput&&touch&&mobile.move.Held){input=mobile.move.Value;run=input.magnitude>.72f;}
   var right=view.transform.right;right.y=0;right.Normalize();var forward=view.transform.forward;forward.y=0;forward.Normalize();
   input=ClampInput(input);var desired=(right*input.x+forward*input.y)*(run?runSpeed:walkSpeed);
-  velocity=Vector3.MoveTowards(velocity,desired,acceleration*Time.deltaTime);
-  gravity=motor.isGrounded?-2:Mathf.Max(gravity-25*Time.deltaTime,-30);
-  var before=transform.position;motor.Move((velocity+Vector3.up*gravity)*Time.deltaTime);
-  var actual=transform.position-before;actual.y=0;Speed=actual.magnitude/Mathf.Max(Time.deltaTime,.0001f);
   Vector3 aim=visual.forward;
   if(SimulatedInput){aim=new Vector3(TestAim.x,0,TestAim.y);AimPoint=transform.position+aim*range;}
   else if(touch&&(Application.isMobilePlatform||mobile.move.Held||mobile.aim.Held)){if(desired.sqrMagnitude>.02f)lastMoveDirection=desired.normalized;aim=lastMoveDirection;AimPoint=transform.position+aim*range;}
   else if(mouse!=null){var ray=view.ScreenPointToRay(mouse.position.ReadValue());if(new Plane(Vector3.up,transform.position+Vector3.up*1).Raycast(ray,out float d)){AimPoint=ray.GetPoint(d);aim=AimPoint-transform.position;aim.y=0;}}
-  if(aim.sqrMagnitude>.05f)visual.rotation=Quaternion.RotateTowards(visual.rotation,Quaternion.LookRotation(aim),turnSpeed*Time.deltaTime);
-  if(Speed>.15f){float dot=Vector3.Dot(velocity,visual.forward);playback=dot<-.2f?-1:1;var travel=velocity*playback;float targetYaw=Vector3.SignedAngle(visual.forward,travel,Vector3.up);legYaw=Mathf.MoveTowardsAngle(legYaw,targetYaw,540*Time.deltaTime);}else legYaw=Mathf.MoveTowardsAngle(legYaw,0,360*Time.deltaTime);
+  if(!Dodge.IsDodging&&aim.sqrMagnitude>.05f)visual.rotation=Quaternion.RotateTowards(visual.rotation,Quaternion.LookRotation(aim),turnSpeed*Time.deltaTime);
+  bool request=dodgeRequested||(!SimulatedInput&&k!=null&&k.spaceKey.wasPressedThisFrame);dodgeRequested=false;
+  if(request&&Dodge.TryBegin(desired,motor.isGrounded)){velocity=Vector3.zero;pendingShot=false;animator.ResetTrigger(FireId);}
+  bool dodging=Dodge.IsDodging;
+  if(!dodging)velocity=Vector3.MoveTowards(velocity,desired,acceleration*Time.deltaTime);
+  gravity=motor.isGrounded?-2:Mathf.Max(gravity-25*Time.deltaTime,-30);
+  var before=transform.position;var displacement=dodging?Dodge.ConsumeDisplacement():velocity*Time.deltaTime;displacement+=hitReaction.ConsumeDisplacement(Time.deltaTime);
+  motor.Move(displacement+Vector3.up*(gravity*Time.deltaTime));
+  var actual=transform.position-before;actual.y=0;Speed=actual.magnitude/Mathf.Max(Time.deltaTime,.0001f);if(dodging)Dodge.ReportMovement(actual);
+  if(dodging)legYaw=0;
+  else if(Speed>.15f){float dot=Vector3.Dot(velocity,visual.forward);playback=dot<-.2f?-1:1;var travel=velocity*playback;float targetYaw=Vector3.SignedAngle(visual.forward,travel,Vector3.up);legYaw=Mathf.MoveTowardsAngle(legYaw,targetYaw,540*Time.deltaTime);}else legYaw=Mathf.MoveTowardsAngle(legYaw,0,360*Time.deltaTime);
   animator.SetFloat("Playback",playback*1.2f);
-  animator.SetFloat(SpeedId,Speed/1.2f,.09f,Time.deltaTime);weapon.Tick(Time.time);
+  animator.SetFloat(SpeedId,dodging?0:Speed/1.2f,.09f,Time.deltaTime);weapon.Tick(Time.time);
   if(k!=null&&k.rKey.wasPressedThisFrame)weapon.Reload(Time.time);
   bool mobilePress=touch&&mobile.aim.ConsumePress();
   bool fire=SimulatedInput?TestFire:touch&&(mobile.aim.Held||mobilePress)?true:!Application.isMobilePlatform&&mouse!=null&&mouse.leftButton.isPressed&&!(UnityEngine.EventSystems.EventSystem.current&&UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject());
-  if(fire&&weapon.TryFire(Time.time)){pendingShot=true;animator.ResetTrigger(FireId);animator.SetTrigger(FireId);}
+  if(!dodging&&fire&&weapon.TryFire(Time.time)){pendingShot=true;animator.ResetTrigger(FireId);animator.SetTrigger(FireId);}
  }
  void LateUpdate(){
   if(pendingShot){pendingShot=false;Fire();}
@@ -57,7 +71,7 @@ public sealed class ArenaPlayer:MonoBehaviour {
   Vector3 direction=visual.forward;var origin=muzzle.position;var chest=transform.position+Vector3.up*1.05f;
   int mask=~(1<<gameObject.layer);var end=origin+direction*range;RaycastHit hit;bool impacted=false;
   if(Physics.Linecast(chest,origin,out hit,mask,QueryTriggerInteraction.Ignore)||Physics.Raycast(origin,direction,out hit,range,mask,QueryTriggerInteraction.Ignore)){
-   impacted=true;end=hit.point;var target=hit.collider.GetComponentInParent<TargetDummy>();if(target){target.Damage(25);Hits++;}else{var prop=hit.collider.GetComponentInParent<BreakableProp>();var enemy=hit.collider.GetComponentInParent<EnemyAgent>();if(prop){prop.Damage(25);Hits++;}else if(enemy){enemy.Damage(25);Hits++;}}
+   impacted=true;end=hit.point;var target=hit.collider.GetComponentInParent<TargetDummy>();if(target){target.Damage(25);Hits++;}else{var prop=hit.collider.GetComponentInParent<BreakableProp>();var enemy=hit.collider.GetComponentInParent<EnemyAgent>();if(prop){prop.Damage(25);Hits++;}else if(enemy&&enemy.Damage(25,direction)){Hits++;}}
   }
   effects.Play(origin,end,impacted,impacted?hit.normal:Vector3.up); 
  }

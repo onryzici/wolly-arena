@@ -6,6 +6,8 @@ public sealed class EnemyAgent:MonoBehaviour {
  public Transform visual,target;public Animator animator;public CharacterVitals vitals;public TMP_Text nameLabel,healthLabel;public RectTransform healthFill;public Canvas nameplate;public EnemySpawnDirector director;
  public float moveSpeed=2.35f,attackRange=6.5f,shotInterval=1.35f;public int shotDamage=125;public int CombatSlot{get;set;}
  public bool Defeated{get;private set;}
+ public float hitPushDistance=.38f;
+ HitReaction hitReaction;
  float born,deathAt,nextPath,nextShot,settledAt=-1,legYaw;bool pendingShot,hasGoal;Vector3 baseScale,combatGoal,lastGoalTarget;NavMeshAgent navigation;CapsuleCollider hitbox;Transform muzzle,hips,spine;CharacterVitals targetVitals;ShotEffects effects;Camera view;
  NavMeshPath candidatePath;readonly RaycastHit[] hitBuffer=new RaycastHit[32];
  void Awake(){candidatePath=new NavMeshPath();baseScale=visual.localScale;born=Time.time;nextShot=born+Random.Range(1.1f,1.8f);view=Camera.main;var oldMotor=GetComponent<CharacterController>();if(oldMotor)oldMotor.enabled=false;
@@ -13,8 +15,25 @@ public sealed class EnemyAgent:MonoBehaviour {
   navigation=gameObject.AddComponent<NavMeshAgent>();navigation.enabled=false;navigation.radius=.52f;navigation.height=1.6f;navigation.speed=moveSpeed;navigation.acceleration=8;navigation.angularSpeed=480;navigation.updateRotation=false;navigation.stoppingDistance=.28f;navigation.autoRepath=true;navigation.obstacleAvoidanceType=ObstacleAvoidanceType.HighQualityObstacleAvoidance;
   foreach(var t in visual.GetComponentsInChildren<Transform>()){if(t.name=="Muzzle")muzzle=t;if(t.name=="mixamorig:Hips")hips=t;if(t.name=="mixamorig:Spine")spine=t;}
   animator.SetFloat("Speed",0);animator.SetFloat("Playback",1);
+  hitReaction=gameObject.AddComponent<HitReaction>();visual=hitReaction.Initialize(visual,vitals,hitPushDistance);
  }
- public void Damage(int amount){if(Defeated||Time.time-born<.35f)return;vitals.Damage(amount);if(vitals.Health==0){Defeated=true;pendingShot=false;hitbox.enabled=false;if(navigation.enabled&&navigation.isOnNavMesh)navigation.isStopped=true;navigation.enabled=false;nameplate.enabled=false;deathAt=Time.time;}}
+ public bool Damage(int amount,Vector3 direction=default){
+  if(Defeated||Time.time-born<.35f||!vitals.Damage(amount,direction))return false;
+  pendingShot=false;settledAt=-1;nextShot=Mathf.Max(nextShot,Time.time+.22f);animator.ResetTrigger("Fire");
+  if(navigation.enabled&&navigation.isOnNavMesh){navigation.isStopped=true;navigation.velocity=Vector3.zero;}
+  if(vitals.Health==0){Defeated=true;hitbox.enabled=false;nameplate.enabled=false;deathAt=Time.time;}
+  return true;
+ }
+ void MoveKnockback(){
+  var displacement=hitReaction.ConsumeDisplacement(Time.deltaTime);float distance=displacement.magnitude;
+  if(distance<.00001f||!navigation.enabled||!navigation.isOnNavMesh)return;
+  var direction=displacement/distance;var origin=transform.position;
+  // Constrain the swept body against live props as well as the baked navigation edge.
+  int count=Physics.CapsuleCastNonAlloc(origin+Vector3.up*.36f,origin+Vector3.up*1.24f,.32f,direction,hitBuffer,distance+.025f,~0,QueryTriggerInteraction.Ignore);
+  for(int i=0;i<count;i++)if(!hitBuffer[i].collider.transform.IsChildOf(transform))distance=Mathf.Min(distance,Mathf.Max(0,hitBuffer[i].distance-.025f));
+  if(navigation.Raycast(origin+direction*distance,out var edge))distance=Mathf.Min(distance,Mathf.Max(0,Vector3.Distance(origin,edge.position)-.025f));
+  navigation.Move(direction*distance);
+ }
  bool FirstHit(Vector3 origin,Vector3 direction,float distance,out RaycastHit closest){closest=default;float nearest=float.PositiveInfinity;int count=Physics.RaycastNonAlloc(origin,direction,hitBuffer,distance,~0,QueryTriggerInteraction.Ignore);for(int i=0;i<count;i++){var hit=hitBuffer[i];if(hit.collider.transform.IsChildOf(transform))continue;if(hit.distance<nearest){nearest=hit.distance;closest=hit;}}return nearest<float.PositiveInfinity;}
  bool SightFrom(Vector3 point){var d=target.position+Vector3.up*1.05f-point;return FirstHit(point,d.normalized,d.magnitude+.2f,out var h)&&h.collider.GetComponentInParent<ArenaPlayer>();}
  float NearestAlly(Vector3 point){float result=100;if(director)foreach(var e in director.Enemies)if(e&&e!=this&&!e.Defeated)result=Mathf.Min(result,Vector3.Distance(point,e.transform.position));return result;}
@@ -29,26 +48,27 @@ public sealed class EnemyAgent:MonoBehaviour {
   if(found){hasGoal=true;navigation.SetDestination(combatGoal);lastGoalTarget=target.position;}
  }
  void Update(){
-  if(Defeated){visual.localScale=baseScale*Mathf.Max(0,1-(Time.time-deathAt)/.22f);if(Time.time-deathAt>.25f)Destroy(gameObject);return;}
+  if(Defeated){MoveKnockback();visual.localScale=baseScale*Mathf.Max(0,1-(Time.time-deathAt)/.22f);if(Time.time-deathAt>.25f)Destroy(gameObject);return;}
   float u=Mathf.Clamp01((Time.time-born)/.28f);visual.localScale=baseScale*Mathf.SmoothStep(.15f,1,u);
   if(u>=1&&!navigation.enabled&&NavMesh.SamplePosition(transform.position,out var point,1,NavMesh.AllAreas)){transform.position=point.position;if(director)navigation.agentTypeID=director.AgentTypeId;navigation.avoidancePriority=35+(CombatSlot%4)*12;navigation.enabled=true;hitbox.enabled=true;combatGoal=transform.position;}
   if(!target||!navigation.enabled||!navigation.isOnNavMesh)return;if(!targetVitals)targetVitals=target.GetComponent<CharacterVitals>();if(!effects&&director)effects=director.Effects;
+  bool recoiling=hitReaction.Recoiling;MoveKnockback();
   var delta=target.position-transform.position;delta.y=0;float distance=delta.magnitude;var direction=distance>.001f?delta/distance:visual.forward;bool alive=targetVitals&&targetVitals.Health>0;bool seesPlayer=alive&&SightFrom(transform.position+Vector3.up*1.05f);
   bool atSlot=hasGoal&&Vector3.Distance(transform.position,combatGoal)<.65f;bool comfortable=seesPlayer&&distance>3.2f&&distance<attackRange-.3f&&NearestAlly(transform.position)>1.15f;
-  navigation.isStopped=!alive||(atSlot&&comfortable);
-  if(alive&&Time.time>=nextPath&&(!atSlot||!comfortable||Vector3.Distance(lastGoalTarget,target.position)>.8f))ChooseGoal();
+  navigation.isStopped=recoiling||!alive||(atSlot&&comfortable);
+  if(!recoiling&&alive&&Time.time>=nextPath&&(!atSlot||!comfortable||Vector3.Distance(lastGoalTarget,target.position)>.8f))ChooseGoal();
   // Small local spacing correction complements agent avoidance without a shared destination.
-  if(alive&&director){Vector3 separation=Vector3.zero;foreach(var e in director.Enemies){if(!e||e==this||e.Defeated)continue;var away=transform.position-e.transform.position;away.y=0;float d=away.magnitude;if(d>.01f&&d<1.15f)separation+=away/d*(1.15f-d);}if(separation.sqrMagnitude>.001f)navigation.Move(Vector3.ClampMagnitude(separation,.65f)*Time.deltaTime);}
+  if(!recoiling&&alive&&director){Vector3 separation=Vector3.zero;foreach(var e in director.Enemies){if(!e||e==this||e.Defeated)continue;var away=transform.position-e.transform.position;away.y=0;float d=away.magnitude;if(d>.01f&&d<1.15f)separation+=away/d*(1.15f-d);}if(separation.sqrMagnitude>.001f)navigation.Move(Vector3.ClampMagnitude(separation,.65f)*Time.deltaTime);}
   var velocity=navigation.velocity;float speed=velocity.magnitude;var facing=seesPlayer?direction:speed>.15f?velocity:direction;facing.y=0;if(facing.sqrMagnitude>.01f)visual.rotation=Quaternion.RotateTowards(visual.rotation,Quaternion.LookRotation(facing),360*Time.deltaTime);
   float playback=Vector3.Dot(velocity,visual.forward)<-.15f?-1:1;float yaw=speed>.15f?Vector3.SignedAngle(visual.forward,velocity*playback,Vector3.up):0;legYaw=Mathf.MoveTowardsAngle(legYaw,yaw,420*Time.deltaTime);animator.SetFloat("Speed",speed,.12f,Time.deltaTime);animator.SetFloat("Playback",playback);
-  if(speed<.25f&&seesPlayer){if(settledAt<0)settledAt=Time.time;}else settledAt=-1;
-  if(seesPlayer&&distance<attackRange&&settledAt>=0&&Time.time-settledAt>.2f&&Time.time>=nextShot&&Vector3.Dot(visual.forward,direction)>.985f&&muzzle){nextShot=Time.time+shotInterval+Random.Range(-.12f,.18f);pendingShot=true;animator.ResetTrigger("Fire");animator.SetTrigger("Fire");}
+  if(!recoiling&&speed<.25f&&seesPlayer){if(settledAt<0)settledAt=Time.time;}else settledAt=-1;
+  if(!recoiling&&seesPlayer&&distance<attackRange&&settledAt>=0&&Time.time-settledAt>.2f&&Time.time>=nextShot&&Vector3.Dot(visual.forward,direction)>.985f&&muzzle){nextShot=Time.time+shotInterval+Random.Range(-.12f,.18f);pendingShot=true;animator.ResetTrigger("Fire");animator.SetTrigger("Fire");}
   nameLabel.text=vitals.displayName;healthLabel.text=vitals.Health.ToString();healthFill.anchorMax=new Vector2(Mathf.Clamp01((float)vitals.Health/vitals.maxHealth),1);if(view)nameplate.transform.rotation=view.transform.rotation;
  }
  void LateUpdate(){
   if(Defeated)return;if(hips&&spine){var upper=spine.rotation;hips.rotation=Quaternion.AngleAxis(legYaw,Vector3.up)*hips.rotation;spine.rotation=upper;}
   if(!pendingShot)return;pendingShot=false;if(!targetVitals||targetVitals.Health==0)return;var chest=transform.position+Vector3.up*1.05f;var barrel=muzzle.position;var segment=barrel-chest;if(FirstHit(chest,segment.normalized,segment.magnitude,out _))return;
-  var destination=target.position+Vector3.up*1.05f;var aim=Quaternion.Euler(0,Random.Range(-1.5f,1.5f),0)*(destination-barrel).normalized;bool hit=FirstHit(barrel,aim,attackRange,out var impact);var end=hit?impact.point:barrel+aim*attackRange;if(hit&&impact.collider.GetComponentInParent<ArenaPlayer>())targetVitals.Damage(shotDamage);if(effects)effects.Play(barrel,end,hit,hit?impact.normal:Vector3.up,true);
+  var destination=target.position+Vector3.up*1.05f;var aim=Quaternion.Euler(0,Random.Range(-1.5f,1.5f),0)*(destination-barrel).normalized;bool hit=FirstHit(barrel,aim,attackRange,out var impact);var end=hit?impact.point:barrel+aim*attackRange;if(hit&&impact.collider.GetComponentInParent<ArenaPlayer>())targetVitals.Damage(shotDamage,aim);if(effects)effects.Play(barrel,end,hit,hit?impact.normal:Vector3.up,true);
  }
 }
 }
