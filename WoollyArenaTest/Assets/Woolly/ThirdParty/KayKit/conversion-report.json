@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Skeleton_Mage",
+    "bones": 41,
+    "clips": [
+      "1H_Melee_Attack_Chop",
+      "Death_A",
+      "Hit_A",
+      "Idle",
+      "Running_A",
+      "Spellcast_Shoot",
+      "Walking_A"
+    ],
+    "vertices": 4098
+  },
+  {
+    "name": "Skeleton_Minion",
+    "bones": 41,
+    "clips": [
+      "1H_Melee_Attack_Chop",
+      "Death_A",
+      "Hit_A",
+      "Idle",
+      "Running_A",
+      "Spellcast_Shoot",
+      "Walking_A"
+    ],
+    "vertices": 4900
+  },
+  {
+    "name": "Skeleton_Rogue",
+    "bones": 41,
+    "clips": [
+      "1H_Melee_Attack_Chop",
+      "Death_A",
+      "Hit_A",
+      "Idle",
+      "Running_A",
+      "Spellcast_Shoot",
+      "Walking_A"
+    ],
+    "vertices": 5301
+  },
+  {
+    "name": "Skeleton_Warrior",
+    "bones": 41,
+    "clips": [
+      "1H_Melee_Attack_Chop",
+      "Death_A",
+      "Hit_A",
+      "Idle",
+      "Running_A",
+      "Spellcast_Shoot",
+      "Walking_A"
+    ],
+    "vertices": 6159
+  }
+]

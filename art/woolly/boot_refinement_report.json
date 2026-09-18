@@ -1,0 +1,7 @@
+{
+  "vertices_reweighted": 2908,
+  "max_weight_sum_error": 1.4156103134155273e-07,
+  "unweighted_vertices": 0,
+  "left_sole_distance_error_over_17_frames": 1.8137189328193415e-07,
+  "unchanged_vertices_above_z": 0.31
+}

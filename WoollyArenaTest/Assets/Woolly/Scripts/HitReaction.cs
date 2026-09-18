@@ -12,6 +12,9 @@ namespace WoollyArena
         [Min(.01f)] public float flinchDuration = .22f;
         [Range(0, 30)] public float leanDegrees = 12f;
 
+        public float impulseCooldown;
+        public bool InterruptedLastHit { get; private set; }
+        float nextImpulse;
         public bool Recoiling => motionTime < pushDuration;
         public float FlashAmount { get; private set; }
 
@@ -54,7 +57,8 @@ namespace WoollyArena
             incoming.y = 0;
             direction = incoming.sqrMagnitude > .001f ? incoming.normalized : -visual.forward;
             // Refresh the impulse instead of stacking velocity during sustained fire.
-            motionTime = 0;
+            InterruptedLastHit = Time.time >= nextImpulse;
+            if (InterruptedLastHit) { motionTime = 0; nextImpulse = Time.time + impulseCooldown; }
             hitAt = Time.time;
             presenting = true;
             SetFlash(1);
@@ -103,7 +107,7 @@ namespace WoollyArena
 
         public void ResetReaction()
         {
-            motionTime = float.PositiveInfinity;
+            motionTime = float.PositiveInfinity; nextImpulse = 0; InterruptedLastHit = false;
             ResetPresentation();
         }
 

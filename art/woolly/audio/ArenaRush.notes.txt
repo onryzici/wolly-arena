@@ -1,0 +1,9 @@
+{
+  "seconds": 53.333333333333336,
+  "bpm": 144,
+  "bars": 32,
+  "peak": 0.5620290585489609,
+  "rms": 0.10680001474474024,
+  "seam_step": 0.0,
+  "rights": "Original procedural composition; no third-party samples."
+}

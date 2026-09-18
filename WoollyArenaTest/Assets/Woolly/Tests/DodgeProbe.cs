@@ -54,7 +54,7 @@ namespace WoollyArena
 
         IEnumerator Start()
         {
-            Directory.CreateDirectory("Logs"); File.WriteAllText(Report, "Dodge play-mode review\n");
+            Directory.CreateDirectory("Logs"); File.WriteAllText(Report, "Dash play-mode review\n");
             yield return new WaitForSeconds(.8f);
             player = GetComponent<ArenaPlayer>(); vitals = GetComponent<CharacterVitals>();
             reaction = GetComponent<HitReaction>(); motor = GetComponent<CharacterController>();
@@ -71,8 +71,8 @@ namespace WoollyArena
             Check(!player.RequestDodge(), "Active dodge rejects repeated input");
             yield return FinishDodge();
             var delta = transform.position - before; delta.y = 0;
-            Check(Mathf.Abs(delta.magnitude - player.Dodge.distance) < .08f && Vector3.Dot(delta.normalized, Vector3.forward) > .98f, "Directional dodge travels 2.25 m: " + delta.magnitude.ToString("F3"));
-            Check(player.animator.transform.localRotation == Quaternion.identity && player.animator.transform.localScale == Vector3.one && player.animator.GetLayerWeight(1) == 1, "Skeletal roll restores aim without spinning or shrinking the entire model");
+            Check(Mathf.Abs(delta.magnitude - player.Dodge.distance) < .08f && Vector3.Dot(delta.normalized, Vector3.forward) > .98f, "Directional dash travels its configured range: " + delta.magnitude.ToString("F3"));
+            Check(player.animator.transform.localRotation == Quaternion.identity && player.animator.transform.localScale == Vector3.one && player.animator.GetLayerWeight(1) == 1, "Dash restores aim without spinning or shrinking the model");
             Check(player.animator.transform.Find("Woolly_Rig/mixamorig:Hips"), "Existing animation bindings remain intact");
             Check(!player.RequestDodge() && player.Dodge.CooldownRemaining > .3f, "Cooldown rejects requests without buffering another dodge");
             Check(vitals.Damage(1, Vector3.back), "Damage works again after the protection window"); reaction.ResetReaction();
@@ -88,7 +88,7 @@ namespace WoollyArena
             ResetPlayer(); player.TestAim = Vector2.left; yield return new WaitForSeconds(.35f);
             before = transform.position;
             yield return Begin();
-            Check(Vector3.Dot(player.Dodge.Direction, Vector3.left) > .98f, "Stationary dodge uses the character's facing direction");
+            Check(Vector3.Dot(player.Dodge.Direction, player.LastMoveDirection) > .98f, "Stationary dash keeps the last movement direction instead of auto aim");
             yield return FinishDodge();
 
             ResetPlayer(); yield return new WaitForSeconds(.12f);
@@ -105,7 +105,7 @@ namespace WoollyArena
             yield return Begin();
             bool firedDuringRoll = false;
             while (player.Dodge.IsDodging) { firedDuringRoll |= player.weapon.Shots != shots; yield return null; }
-            Check(!firedDuringRoll, "Firing is suppressed during the roll");
+            Check(!firedDuringRoll, "Legacy manual firing is suppressed during dash");
             yield return null;
             Check(player.weapon.Shots == shots + 1, "Held fire resumes after landing"); player.TestFire = false;
             Check(player.weapon.Reload(Time.time), "Reload starts with a partially spent magazine");
@@ -142,13 +142,15 @@ namespace WoollyArena
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Space));
             yield return new WaitForSeconds(1.4f);
             delta = transform.position - before; delta.y = 0;
-            Check(!player.Dodge.IsDodging && delta.magnitude < 2.4f, "Holding Space does not repeatedly dodge when cooldown expires");
+            Check(!player.Dodge.IsDodging && delta.magnitude < player.Dodge.distance + .2f, "Holding Space does not repeatedly dodge when cooldown expires");
             InputSystem.RemoveDevice(keyboard); player.SimulatedInput = true;
 
             ResetPlayer(); yield return new WaitForSeconds(.12f);
-            yield return Begin(); yield return new WaitForSeconds(.36f);
+            Time.timeScale = .2f;
+            yield return Begin();
+            while (player.Dodge.Progress < .9f) yield return null;
             Check(player.Dodge.IsDodging && vitals.Damage(1, Vector3.back), "The final recovery frames are vulnerable");
-            reaction.ResetReaction(); yield return FinishDodge();
+            reaction.ResetReaction(); yield return FinishDodge(); Time.timeScale = 1;
 
             ResetPlayer(); yield return new WaitForSeconds(.12f);
             vitals.Damage(10000);
@@ -165,19 +167,19 @@ namespace WoollyArena
             yield return Begin();
             while (player.Dodge.Progress < .4f) yield return null;
             yield return new WaitForEndOfFrame();
-            Check(player.animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Dodge"), "Dedicated skeletal Dodge clip plays during the roll");
+            Check(player.animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Locomotion"), "Dash uses locomotion instead of the roll animation");
             var body = System.Array.Find(player.visual.GetComponentsInChildren<SkinnedMeshRenderer>(), r => r.name == "Woolly_Body");
             var mesh = new Mesh(); body.BakeMesh(mesh);
             float ground = float.PositiveInfinity;
             foreach (var vertex in mesh.vertices) ground = Mathf.Min(ground, body.transform.TransformPoint(vertex).y - player.transform.position.y);
             Destroy(mesh);
-            Check(ground > -.03f && ground < .08f, "Curled body stays in contact with the ground during the roll: " + ground.ToString("F3"));
+            Check(ground > -.25f && ground < .5f, "Dash keeps the running body near the ground: " + ground.ToString("F3"));
             Time.timeScale = 0;
-            ScreenCapture.CaptureScreenshot("Logs/dodge-in-action.png");
+            ScreenCapture.CaptureScreenshot("Logs/dash-in-action.png");
             yield return new WaitForEndOfFrame(); yield return new WaitForEndOfFrame();
             Time.timeScale = 1;
             File.AppendAllText(Report, "COMPLETE: restoring a clean arena for manual play.\n");
-            Debug.Log("DODGE_REVIEW_OK");
+            Debug.Log("DASH_REVIEW_OK");
             SceneManager.sceneLoaded += RunHitRegression;
             SceneManager.LoadScene("TrainingArena");
         }

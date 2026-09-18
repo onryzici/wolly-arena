@@ -20,10 +20,15 @@
 **/.idea/
 **/.vscode/
 /*.png
-/art/**
-!/art/woolly/
-!/art/woolly/Woolly_Unity_AnimationSource_v4.blend
 /*.cs
 /*-command.json
 /unity-commands.json
 /*.log
+
+# Generated diagnostics, Python caches and temporary art backups
+**/__pycache__/
+**/*.pyc
+**/*.log
+art/**/idle_revision_backup/
+art/**/before_woolly_rebind/
+art/**/*Backup*.blend

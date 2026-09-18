@@ -25,7 +25,7 @@ namespace WoollyArena
                 displayedCooldown = remaining;
                 SetVerticesDirty();
             }
-            label.text = remaining > 0 ? remaining.ToString("F1") + "s" : Application.isMobilePlatform ? "KAÇ" : "SPACE";
+            label.text = remaining > 0 ? remaining.ToString("F1") + "s" : Application.isMobilePlatform ? "ATIL" : "SPACE";
             label.color = ready ? new Color(.85f, .96f, 1) : new Color(.6f, .72f, .85f);
             transform.localScale = Vector3.one * (pointer != int.MinValue && ready ? .94f : 1);
         }

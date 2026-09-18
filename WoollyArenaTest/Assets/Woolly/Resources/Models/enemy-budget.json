@@ -1,0 +1,72 @@
+{
+  "MossMaw": {
+    "vertices": 2973,
+    "joints": [
+      "Torso",
+      "Head",
+      "ArmL",
+      "LegL",
+      "ArmR",
+      "LegR"
+    ]
+  },
+  "SpineRaptor": {
+    "vertices": 3010,
+    "joints": [
+      "Torso",
+      "Head",
+      "ArmL",
+      "LegL",
+      "ArmR",
+      "LegR"
+    ]
+  },
+  "HornBrute": {
+    "vertices": 2960,
+    "joints": [
+      "Torso",
+      "Head",
+      "ArmL",
+      "LegL",
+      "ArmR",
+      "LegR"
+    ]
+  },
+  "StitchReaper": {
+    "vertices": 3158,
+    "joints": [
+      "Torso",
+      "Head",
+      "ArmL",
+      "LegL",
+      "ArmR",
+      "LegR"
+    ]
+  },
+  "FrostWarden": {
+    "vertices": 2999,
+    "joints": [
+      "Torso",
+      "Head",
+      "ArmL",
+      "LegL",
+      "ArmR",
+      "LegR"
+    ]
+  },
+  "ThornMatriarch": {
+    "vertices": 2816,
+    "joints": [
+      "Torso",
+      "Head",
+      "ArmL",
+      "SpiderL0",
+      "SpiderL1",
+      "SpiderL2",
+      "ArmR",
+      "SpiderR0",
+      "SpiderR1",
+      "SpiderR2"
+    ]
+  }
+}

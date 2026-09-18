@@ -1,0 +1,25 @@
+{
+  "idle_reference": "Woolly_Adventurer_Idle_v7.blend / Idle_Breathing_3s",
+  "vertices_reweighted": 11263,
+  "weight_sum_error": 4.470348358154297e-08,
+  "clips": {
+    "Run": {
+      "frames": 17,
+      "max_lateral_foot_tilt_degrees": 5.0692810246194996e-05,
+      "max_root_lift": 0.022302575029432774,
+      "loop_closed": true
+    },
+    "Walk": {
+      "frames": 26,
+      "max_lateral_foot_tilt_degrees": 3.920605289813655e-05,
+      "max_root_lift": 0.04597382861375809,
+      "loop_closed": true
+    },
+    "Idle": {
+      "frames": 73,
+      "max_lateral_foot_tilt_degrees": 2.1120058821484e-05,
+      "max_root_lift": 6.574392318742239e-08,
+      "loop_closed": true
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "reference": "Woolly_Unity_Unarmed.blend",
+  "bone_count": 36,
+  "rest_matrix_error": 0.0,
+  "clips": {
+    "Idle": {
+      "samples": 145,
+      "pose_matrix_error": 0,
+      "minimum_sole_height": 0.007999321445822716,
+      "woolly_minimum_sole_height": -6.416812539100647e-07,
+      "maximum_contact_regression": 0,
+      "sole_shape_error": 1.086516359105616e-07,
+      "loop_seam": 0.0,
+      "sole_drift": 7.354594873936812e-07,
+      "sole_height_difference": 5.6438148021698e-07
+    },
+    "Walk": {
+      "samples": 49,
+      "pose_matrix_error": 0,
+      "minimum_sole_height": -0.006729772314429283,
+      "woolly_minimum_sole_height": -0.018778076395392418,
+      "maximum_contact_regression": 0,
+      "sole_shape_error": 2.423762520131767e-07,
+      "loop_seam": 0.0
+    },
+    "Run": {
+      "samples": 33,
+      "pose_matrix_error": 0,
+      "minimum_sole_height": -0.0324726402759552,
+      "woolly_minimum_sole_height": -0.05843682587146759,
+      "maximum_contact_regression": 0,
+      "sole_shape_error": 1.1210839706010667e-06,
+      "loop_seam": 0.0
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "clips": [
+    "Idle",
+    "Run",
+    "Walk"
+  ],
+  "idle_frames": [
+    1,
+    73
+  ],
+  "idle_foot_drift_m": 3.611034398094605e-07,
+  "validation": "Blender FBX reimport, no Unity Editor launched"
+}

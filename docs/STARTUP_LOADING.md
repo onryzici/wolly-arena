@@ -1,0 +1,11 @@
+# Trio startup loading screen — build 10
+
+A 2D cartoon team wallpaper uses Woolly, Punk Vera and Patchwork's existing portraits as identity references. Generated with the built-in image_gen tool. The approved wide output was 1672×941 and was upscaled with macOS sips to 3840×2160; this is a 4K upscale, not native 4K synthesis. Exact prompts and provenance: `art/loading/generation-prompts.txt`. Runtime asset: `Assets/Woolly/Resources/MenuSkin/LoadingTrio4K.png`.
+
+The texture remains 3840×2160 in Unity (4096 import ceiling, no power-of-two resizing, no mipmaps, uncompressed). Unity's native iOS launch images use the same art, replacing the previous default opening. The generated `Startup` scene precedes `Lobby` and `TrainingArena` in build settings. `StartupLoadingSetup.Prepare` recreates the startup scene and configures launch settings as part of `PhoneBuild.Export`.
+
+`StartupLoadingScreen` presents the artwork, then loads Lobby asynchronously. It holds the image for at least 1.8 seconds and reports actual scene-load progress, blocks underlying UI input, waits for Lobby's initial animator/layout pass, and fades out over 0.35 seconds. Timing uses unscaled time. Returning to the lobby later does not replay the cold-launch screen. Texture and dynamically created progress sprite are released when the overlay closes. Text stays within the safe area; the wallpaper uses aspect-fill without stretching and has crop margins for wide phones.
+
+Unity rendered previews at 1920×1080 and 1600×738 were visually inspected: `art/loading/startup-review-1920.png` and `startup-review-1600.png`. These are Editor camera renders, not phone captures. Offline C# compilation and 164 shared model checks passed. The headless Unity phone export completed with zero errors, including model/lobby/material checks. Native launch output verified at 3840×2160. No Play mode or visible Editor session was launched.
+
+Patchwork's knife socket moves 0.012 toward the palm and 0.010 toward the wrist in rolled hand-local coordinates; the rear handle end was shortened from -0.090 to -0.055 to reduce protrusion behind the closed grip. FBX, portrait and editable Blender output were regenerated; rig/animation/FBX round-trip validation passed.

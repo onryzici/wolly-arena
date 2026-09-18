@@ -1,0 +1,18 @@
+{
+  "action": "Running_SoleContact_V4",
+  "sole_fit_coefficients": {
+    "mixamorig:LeftFoot": [
+      0.052292953247980445,
+      0.0039241261205346266,
+      -0.0011720516154878607
+    ],
+    "mixamorig:RightFoot": [
+      -0.052354339848704516,
+      0.016537404563591596,
+      0.0008750892786952266
+    ]
+  },
+  "max_stance_sole_plane_tilt_degrees": 1.5186531816429019,
+  "stance_measurements": 97,
+  "note": "Best-fit outsole support plane aligned during stance; individual sculpted tread lugs retain their original irregularities."
+}

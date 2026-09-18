@@ -1,0 +1,24 @@
+{
+  "clips": {
+    "Idle": [
+      1.0,
+      73.0
+    ],
+    "Walk": [
+      1.0,
+      25.0
+    ],
+    "Run": [
+      1.0,
+      17.0
+    ],
+    "Shoot": [
+      1.0,
+      10.0
+    ]
+  },
+  "fps": 24,
+  "bones": 36,
+  "weapon_vertices": 2534,
+  "fbx": "/Users/trexoinnovation/mobil-lamb-test/WoollyArenaTest/Assets/Woolly/Art/Woolly.fbx"
+}

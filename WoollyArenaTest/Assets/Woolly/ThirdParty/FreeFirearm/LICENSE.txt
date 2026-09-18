@@ -1,0 +1,5 @@
+Free Firearm Sound Library
+Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+Source and license statement: https://opengameart.org/content/the-free-firearm-sound-library
+See selected-assets.json for the recordings used and their modifications.

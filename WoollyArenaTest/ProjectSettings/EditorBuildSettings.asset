@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Woolly/Scenes/Startup.unity
+    guid: f68ef478349a443ba85cc775ee8c0ef6
+  - enabled: 1
     path: Assets/Woolly/Scenes/Lobby.unity
     guid: 52afa60127839431198feced118c0a63
   - enabled: 1

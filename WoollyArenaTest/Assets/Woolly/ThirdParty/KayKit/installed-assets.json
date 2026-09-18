@@ -1,0 +1,77 @@
+{
+  "sources": [
+    "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0",
+    "https://github.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0"
+  ],
+  "license": "CC0",
+  "files": [
+    {
+      "file": "Resources/KayKit/Skeleton_Axe.fbx",
+      "sha256": "b921180f7cc55306c4907e51676d3f7b6cecf0ab2f90095e269ba807e023f55c"
+    },
+    {
+      "file": "Resources/KayKit/Skeleton_Blade.fbx",
+      "sha256": "16c3d747dcbb0fc12902f4d99a31edee06c02348815308dc19a02ac1955ee515"
+    },
+    {
+      "file": "Resources/KayKit/Skeleton_Mage.fbx",
+      "sha256": "db4c81e6b623ed73aa70a1fcf9e4e8896cbe60055f52d0c0dd2a3a682e444b39"
+    },
+    {
+      "file": "Resources/KayKit/Skeleton_Minion.fbx",
+      "sha256": "e597c4f71fe02bad6d84d64649d6b7fbc2acd230cbd30aec61dcab2d0aac685a"
+    },
+    {
+      "file": "Resources/KayKit/Skeleton_Rogue.fbx",
+      "sha256": "9e967c55f9ae85c318120e2c7d4f50d1fae096f6ea478108150dd2b95d1c0a9d"
+    },
+    {
+      "file": "Resources/KayKit/Skeleton_Staff.fbx",
+      "sha256": "7b9fa1ec537d6c5d609e83c2e3d13e247ca252716cab36a6fa83a63100145457"
+    },
+    {
+      "file": "Resources/KayKit/Skeleton_Warrior.fbx",
+      "sha256": "9ce1658c753985db6bedf12d5e72b570949e44462003de9b7432071527e3fa44"
+    },
+    {
+      "file": "Resources/KayKit/banner_blue.fbx",
+      "sha256": "99d2bc3c921468ce033a9be599f50593f4e20106353f2334d68c70a7ba7eb543"
+    },
+    {
+      "file": "Resources/KayKit/banner_red.fbx",
+      "sha256": "73052ab54aa9c2a9b2fe4ab1d682cf3a947eaa2d201d6f9b4088000e9188be04"
+    },
+    {
+      "file": "Resources/KayKit/barrel_large.fbx",
+      "sha256": "da828b2bcbfb12148b49e40d4937c0c58b135eba7c15b823caee49fb54ef2fa9"
+    },
+    {
+      "file": "Resources/KayKit/barrel_small_stack.fbx",
+      "sha256": "828a1460eb9b952fff51198e7235a9f7013a3d1b11374a42ec16653f30b13998"
+    },
+    {
+      "file": "Resources/KayKit/chest_gold.fbx",
+      "sha256": "672f98242543b2ba3a51ba33109d82101d961de127690f3846270e2430fe8d01"
+    },
+    {
+      "file": "Resources/KayKit/crates_stacked.fbx",
+      "sha256": "73e5c7443b1ce29c63d1b77cfc911fe0fc7835afe1f9417f0ff7ae3a0678e933"
+    },
+    {
+      "file": "Resources/KayKit/dungeon_texture.png",
+      "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+    },
+    {
+      "file": "Resources/KayKit/pillar_decorated.fbx",
+      "sha256": "1f2af46f6954630664637a5074dda2535a75e284d25c9b95be313bba978aeaa7"
+    },
+    {
+      "file": "Resources/KayKit/skeleton_texture.png",
+      "sha256": "15741a25c53e04fa9bf3beac3bc0de442359404b1ff9be863b892cb551ad3657"
+    },
+    {
+      "file": "Resources/KayKit/torch_lit.fbx",
+      "sha256": "72b808e123a01a2ed16eb0748cc9215ce5266b6e73abb28580800fe5d3808be5"
+    }
+  ]
+}

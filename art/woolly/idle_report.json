@@ -1,0 +1,13 @@
+{
+  "action": "Idle_Breathing_3s",
+  "duration_seconds": 3,
+  "fps": 24,
+  "playback_frames": [
+    1,
+    72
+  ],
+  "loop_closing_key": 73,
+  "foot_drift_max": 1.055686078880128e-07,
+  "mesh_loop_seam_max": 0.0,
+  "retained_run_action": "Running_NaturalContact_V5"
+}

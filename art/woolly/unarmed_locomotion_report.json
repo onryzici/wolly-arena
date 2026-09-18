@@ -1,0 +1,20 @@
+{
+  "Idle": {
+    "frames": 73,
+    "right_hand_travel": 0.011888363398611546,
+    "preserved_non_arm_channels": true,
+    "loop_seam_closed": true
+  },
+  "Walk": {
+    "frames": 25,
+    "right_hand_travel": 0.1718270741403103,
+    "preserved_non_arm_channels": true,
+    "loop_seam_closed": true
+  },
+  "Run": {
+    "frames": 17,
+    "right_hand_travel": 0.340179480612278,
+    "preserved_non_arm_channels": true,
+    "loop_seam_closed": true
+  }
+}

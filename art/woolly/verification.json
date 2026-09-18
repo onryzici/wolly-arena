@@ -1,0 +1,7 @@
+{
+  "max_animated_corner_position_error": 0.0,
+  "frames_checked": 17,
+  "boundary_edges_after": 8,
+  "nonmanifold_edges_after": 13,
+  "triangles": 28830
+}

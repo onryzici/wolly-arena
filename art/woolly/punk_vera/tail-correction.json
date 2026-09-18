@@ -1,0 +1,16 @@
+{
+  "tail_vertices": 26676,
+  "original_center": [
+    0.18661577999591827,
+    0.14684626460075378,
+    0.5041346549987793
+  ],
+  "corrected_center": [
+    0.0,
+    0.23499999940395355,
+    0.5550000071525574
+  ],
+  "bound_to_hips": true,
+  "old_socket_capped": true,
+  "trouser_vertices_not_displaced": true
+}

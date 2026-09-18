@@ -1,0 +1,532 @@
+{
+  "original_action": "Running",
+  "corrected_action": "Running_Feet_Aligned",
+  "max_lateral_tilt_before_degrees": 29.975916563799455,
+  "max_lateral_tilt_after_degrees": 0.1493431090819305,
+  "changed_bones": [
+    "mixamorig:LeftFoot",
+    "mixamorig:RightFoot"
+  ],
+  "samples": [
+    {
+      "frame": 1.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 23.36832219558856
+    },
+    {
+      "frame": 1.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 8.979543101074144
+    },
+    {
+      "frame": 1.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 23.36832219558856
+    },
+    {
+      "frame": 1.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 8.979543101074144
+    },
+    {
+      "frame": 1.6000080108642578,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 23.36832219558856
+    },
+    {
+      "frame": 1.6000080108642578,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 8.979543101074144
+    },
+    {
+      "frame": 2.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 18.734891859632643
+    },
+    {
+      "frame": 2.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 7.7243248767823
+    },
+    {
+      "frame": 2.4000000953674316,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 14.02770866187681
+    },
+    {
+      "frame": 2.4000000953674316,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 4.796246456905769
+    },
+    {
+      "frame": 2.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 12.596120872401404
+    },
+    {
+      "frame": 2.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 4.0565701764287025
+    },
+    {
+      "frame": 3.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 4.675705937953572
+    },
+    {
+      "frame": 3.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -0.575807446076779
+    },
+    {
+      "frame": 3.1999919414520264,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 1.3478194519792803
+    },
+    {
+      "frame": 3.1999919414520264,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -2.822083338960834
+    },
+    {
+      "frame": 3.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -4.159886139341872
+    },
+    {
+      "frame": 3.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -5.697342663476942
+    },
+    {
+      "frame": 4.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -13.038958808304164
+    },
+    {
+      "frame": 4.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -10.838391777578648
+    },
+    {
+      "frame": 4.0000081062316895,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -13.038958808304164
+    },
+    {
+      "frame": 4.0000081062316895,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -10.838391777578648
+    },
+    {
+      "frame": 4.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -19.918951877186977
+    },
+    {
+      "frame": 4.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -15.223476645298193
+    },
+    {
+      "frame": 4.800000190734863,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -23.548421272827657
+    },
+    {
+      "frame": 4.800000190734863,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -17.59000257528008
+    },
+    {
+      "frame": 5.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -25.15569715829543
+    },
+    {
+      "frame": 5.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -19.58288318265225
+    },
+    {
+      "frame": 5.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -29.173750639236104
+    },
+    {
+      "frame": 5.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -23.77085386126761
+    },
+    {
+      "frame": 5.599992275238037,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -29.975916563799455
+    },
+    {
+      "frame": 5.599992275238037,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -24.441168023021365
+    },
+    {
+      "frame": 6.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -24.65637053884834
+    },
+    {
+      "frame": 6.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -24.202533743572022
+    },
+    {
+      "frame": 6.400008201599121,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -19.122110910505725
+    },
+    {
+      "frame": 6.400008201599121,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -23.376711628644824
+    },
+    {
+      "frame": 6.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -18.54952081167693
+    },
+    {
+      "frame": 6.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -23.050170551666184
+    },
+    {
+      "frame": 7.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -15.987670817724462
+    },
+    {
+      "frame": 7.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -21.481614744466178
+    },
+    {
+      "frame": 7.200000286102295,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -15.109467912334852
+    },
+    {
+      "frame": 7.200000286102295,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -20.86210161914234
+    },
+    {
+      "frame": 7.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -14.66167503999541
+    },
+    {
+      "frame": 7.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -21.020475585870347
+    },
+    {
+      "frame": 7.999991416931152,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -14.392439070361206
+    },
+    {
+      "frame": 7.999991416931152,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -21.121396512875766
+    },
+    {
+      "frame": 8.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -14.392439070361206
+    },
+    {
+      "frame": 8.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -21.121396512875766
+    },
+    {
+      "frame": 8.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -12.553044385139179
+    },
+    {
+      "frame": 8.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -21.327299886684756
+    },
+    {
+      "frame": 8.800007820129395,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -11.618163469006445
+    },
+    {
+      "frame": 8.800007820129395,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -20.18605278317525
+    },
+    {
+      "frame": 9.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -9.293856784478702
+    },
+    {
+      "frame": 9.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -19.74077010374226
+    },
+    {
+      "frame": 9.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -1.7646739390415405
+    },
+    {
+      "frame": 9.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -16.815226463541897
+    },
+    {
+      "frame": 9.600000381469727,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": -0.01924448523517889
+    },
+    {
+      "frame": 9.600000381469727,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -15.942037028331022
+    },
+    {
+      "frame": 10.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 7.546072201475408
+    },
+    {
+      "frame": 10.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -10.46529102512094
+    },
+    {
+      "frame": 10.399991989135742,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 15.057386324958292
+    },
+    {
+      "frame": 10.399991989135742,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -4.419475176112207
+    },
+    {
+      "frame": 10.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 15.29014624039656
+    },
+    {
+      "frame": 10.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": -2.615079509476855
+    },
+    {
+      "frame": 11.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 16.28151292416558
+    },
+    {
+      "frame": 11.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 6.7264127516041645
+    },
+    {
+      "frame": 11.200008392333984,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 16.565097721785914
+    },
+    {
+      "frame": 11.200008392333984,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 10.4700245766098
+    },
+    {
+      "frame": 11.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 15.440062274961962
+    },
+    {
+      "frame": 11.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 15.005467735883093
+    },
+    {
+      "frame": 12.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 13.705888806686206
+    },
+    {
+      "frame": 12.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 22.30471017715176
+    },
+    {
+      "frame": 12.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 15.448537212970988
+    },
+    {
+      "frame": 12.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 24.413196122219862
+    },
+    {
+      "frame": 12.799991607666016,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 16.243092698991997
+    },
+    {
+      "frame": 12.799991607666016,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 25.617311128450034
+    },
+    {
+      "frame": 13.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 15.676570013894034
+    },
+    {
+      "frame": 13.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 25.125294863421477
+    },
+    {
+      "frame": 13.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 14.307104950628343
+    },
+    {
+      "frame": 13.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 23.481870184931104
+    },
+    {
+      "frame": 13.600008010864258,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 14.039316379543664
+    },
+    {
+      "frame": 13.600008010864258,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 23.094479024114108
+    },
+    {
+      "frame": 14.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 15.601321074795804
+    },
+    {
+      "frame": 14.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 19.715455437565247
+    },
+    {
+      "frame": 14.40000057220459,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 17.008102217613075
+    },
+    {
+      "frame": 14.40000057220459,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 17.130918192532935
+    },
+    {
+      "frame": 14.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 17.91123202808004
+    },
+    {
+      "frame": 14.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 16.570791432959066
+    },
+    {
+      "frame": 15.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 22.325635775755888
+    },
+    {
+      "frame": 15.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 14.664077247015772
+    },
+    {
+      "frame": 15.199993133544922,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 24.017550522873496
+    },
+    {
+      "frame": 15.199993133544922,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 14.349578914319938
+    },
+    {
+      "frame": 15.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 26.336949385889767
+    },
+    {
+      "frame": 15.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 13.620985904468194
+    },
+    {
+      "frame": 16.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 29.940492033593095
+    },
+    {
+      "frame": 16.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 12.984666675803373
+    },
+    {
+      "frame": 16.00000762939453,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 29.940492033593095
+    },
+    {
+      "frame": 16.00000762939453,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 12.984666675803373
+    },
+    {
+      "frame": 16.5,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 26.851690916159384
+    },
+    {
+      "frame": 16.5,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 10.98565383449715
+    },
+    {
+      "frame": 16.799999237060547,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 25.084428352979465
+    },
+    {
+      "frame": 16.799999237060547,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 9.859375534313925
+    },
+    {
+      "frame": 17.0,
+      "bone": "mixamorig:LeftFoot",
+      "lateral_tilt_before_degrees": 25.084428352979465
+    },
+    {
+      "frame": 17.0,
+      "bone": "mixamorig:RightFoot",
+      "lateral_tilt_before_degrees": 9.859375534313925
+    }
+  ]
+}

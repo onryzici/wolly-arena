@@ -1,0 +1,190 @@
+{
+  "objects": [
+    {
+      "name": "Icosphere",
+      "type": "MESH",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dimensions": [
+        1.9021157026290894,
+        1.9999998807907104,
+        2.0
+      ],
+      "vertices": 42,
+      "triangles": 80,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "modifiers": [],
+      "loose_vertices": 0,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0,
+      "unweighted": 42
+    },
+    {
+      "name": "output_unwrapped",
+      "type": "MESH",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dimensions": [
+        1.0999683141708374,
+        0.9754945635795593,
+        1.6537727117538452
+      ],
+      "vertices": 27700,
+      "triangles": 28830,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "loose_vertices": 0,
+      "boundary_edges": 22026,
+      "nonmanifold_edges": 22026,
+      "degenerate_faces": 0,
+      "unweighted": 0
+    },
+    {
+      "name": "target_character",
+      "type": "ARMATURE",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dimensions": [
+        0.6354921460151672,
+        0.7934314608573914,
+        1.6366167068481445
+      ],
+      "bones": [
+        "mixamorig:Hips",
+        "mixamorig:Spine",
+        "mixamorig:Spine1",
+        "mixamorig:Spine2",
+        "mixamorig:Neck",
+        "mixamorig:Head",
+        "mixamorig:HeadTop_End",
+        "headfront",
+        "mixamorig:LeftShoulder",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftHandMiddle4",
+        "mixamorig:RightShoulder",
+        "mixamorig:RightArm",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightHand",
+        "mixamorig:RightHandMiddle4",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftToe_End",
+        "mixamorig:RightUpLeg",
+        "mixamorig:RightLeg",
+        "mixamorig:RightFoot",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightToe_End"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "BakedMaterial",
+      "nodes": [
+        [
+          "Principled BSDF",
+          "BSDF_PRINCIPLED",
+          ""
+        ],
+        [
+          "Material Output",
+          "OUTPUT_MATERIAL",
+          ""
+        ],
+        [
+          "Image Texture",
+          "TEX_IMAGE",
+          "texture_0"
+        ],
+        [
+          "Separate Color",
+          "SEPARATE_COLOR",
+          ""
+        ],
+        [
+          "Image Texture.001",
+          "TEX_IMAGE",
+          "texture_0_metallic_roughness"
+        ],
+        [
+          "Normal Map",
+          "NORMAL_MAP",
+          ""
+        ],
+        [
+          "Image Texture.002",
+          "TEX_IMAGE",
+          "normal"
+        ]
+      ]
+    }
+  ],
+  "images": [
+    {
+      "name": "normal",
+      "size": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color",
+      "packed": true
+    },
+    {
+      "name": "texture_0",
+      "size": [
+        2048,
+        2048
+      ],
+      "colorspace": "sRGB",
+      "packed": true
+    },
+    {
+      "name": "texture_0_metallic_roughness",
+      "size": [
+        4096,
+        4096
+      ],
+      "colorspace": "Non-Color",
+      "packed": true
+    }
+  ],
+  "actions": [
+    {
+      "name": "Running",
+      "range": [
+        1.0,
+        17.0
+      ]
+    },
+    {
+      "name": "Running.001",
+      "range": [
+        0.0,
+        2.0
+      ]
+    }
+  ]
+}

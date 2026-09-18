@@ -1,0 +1,52 @@
+{
+  "bones": 36,
+  "vertices": 50675,
+  "rest_matrix_error": 0.0,
+  "normalized_weights": true,
+  "clips": {
+    "Idle": {
+      "frames": 73,
+      "exact_woolly_pose_error": 0,
+      "sampled_loop_seam": 0.0,
+      "sole_rigid_shape_error": 7.444709568260599e-08,
+      "minimum_height": 0.007999910041689873,
+      "sole_motion": 1.220849872244443e-07
+    },
+    "Walk": {
+      "frames": 25,
+      "exact_woolly_pose_error": 0,
+      "sampled_loop_seam": 0.0,
+      "sole_rigid_shape_error": 1.5465183611507172e-07,
+      "minimum_height": -0.0019064834341406822,
+      "sole_motion": 0.3780290861894033
+    },
+    "Run": {
+      "frames": 17,
+      "exact_woolly_pose_error": 0,
+      "sampled_loop_seam": 0.0,
+      "sole_rigid_shape_error": 7.877454132887429e-07,
+      "minimum_height": -0.003643866628408432,
+      "sole_motion": 0.5944368571046363
+    }
+  },
+  "not_run": [
+    "Unity importer/shader/runtime",
+    "phone build and device checks"
+  ],
+  "knife": {
+    "right_hand_rigid_binding": true,
+    "fbx_vertex_palette_and_blood": true,
+    "vertices": 212
+  },
+  "grip": {
+    "right_hand_rigid_binding": true,
+    "fbx_vertex_palette": true,
+    "vertices": 1924
+  },
+  "fbx_actions": [
+    "Idle",
+    "Run",
+    "Walk"
+  ],
+  "fbx_round_trip": true
+}

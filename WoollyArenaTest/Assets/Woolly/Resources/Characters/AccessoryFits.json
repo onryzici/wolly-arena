@@ -1,0 +1,5 @@
+{"profiles":[
+ {"hat":{"x":0,"y":1.505,"z":-0.035},"hatScale":{"x":1.05,"y":1,"z":1.05},"glasses":{"x":0,"y":1.23,"z":0.285},"glassesScale":{"x":1.08,"y":1,"z":1.10},"necklace":{"x":0,"y":0.998,"z":-0.025},"neckWidth":0.235,"neckDepth":0.245},
+ {"hat":{"x":0,"y":1.425,"z":-0.035},"hatScale":{"x":0.92,"y":1.10,"z":0.94},"glasses":{"x":0,"y":1.215,"z":0.332},"glassesScale":{"x":1,"y":0.95,"z":1.15},"necklace":{"x":0,"y":1,"z":-0.01},"neckWidth":0.215,"neckDepth":0.25},
+ {"hat":{"x":0.035,"y":1.47,"z":-0.085},"hatScale":{"x":1.02,"y":1,"z":0.95},"glasses":{"x":0.022,"y":1.19,"z":0.221},"glassesScale":{"x":1.06,"y":1,"z":1},"necklace":{"x":0.025,"y":1,"z":-0.065},"neckWidth":0.215,"neckDepth":0.225}
+]}

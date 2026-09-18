@@ -1,0 +1,17 @@
+{
+  "new_bones": [
+    "Grip_R_Index_01",
+    "Grip_R_Index_02",
+    "Grip_R_Middle_01",
+    "Grip_R_Middle_02",
+    "Grip_R_Ring_01",
+    "Grip_R_Ring_02",
+    "Grip_R_Thumb_01",
+    "Grip_R_Thumb_02"
+  ],
+  "vertices_reweighted": 849,
+  "weapon_scale": 1.2,
+  "active_action": "Idle_Revolver_Grip_3s",
+  "max_weight_sum_error": 1.4156103134155273e-07,
+  "unweighted_vertices": 0
+}

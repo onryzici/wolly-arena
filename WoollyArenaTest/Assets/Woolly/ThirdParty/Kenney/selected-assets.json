@@ -1,0 +1,107 @@
+[
+  {
+    "resource": "Audio/SFX/Hit0",
+    "source": "art/third-party/kenney/impact-sounds/Audio/impactSoft_heavy_000.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Hit1",
+    "source": "art/third-party/kenney/impact-sounds/Audio/impactSoft_heavy_001.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Hit2",
+    "source": "art/third-party/kenney/impact-sounds/Audio/impactSoft_heavy_002.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Critical",
+    "source": "art/third-party/kenney/impact-sounds/Audio/impactPunch_heavy_000.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Step0",
+    "source": "art/third-party/kenney/impact-sounds/Audio/footstep_grass_000.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Step1",
+    "source": "art/third-party/kenney/impact-sounds/Audio/footstep_grass_001.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Laser0",
+    "source": "art/third-party/kenney/sci-fi-sounds/Audio/laserSmall_000.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Laser1",
+    "source": "art/third-party/kenney/sci-fi-sounds/Audio/laserSmall_001.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Power0",
+    "source": "art/third-party/kenney/sci-fi-sounds/Audio/laserLarge_000.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Power1",
+    "source": "art/third-party/kenney/sci-fi-sounds/Audio/laserLarge_001.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Charge",
+    "source": "art/third-party/kenney/sci-fi-sounds/Audio/forceField_000.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Explosion",
+    "source": "art/third-party/kenney/sci-fi-sounds/Audio/explosionCrunch_000.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Coin0",
+    "source": "art/third-party/kenney/rpg-audio/Audio/handleCoins.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Coin1",
+    "source": "art/third-party/kenney/rpg-audio/Audio/handleCoins2.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Chest",
+    "source": "art/third-party/kenney/rpg-audio/Audio/metalLatch.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Whoosh",
+    "source": "art/third-party/kenney/rpg-audio/Audio/knifeSlice.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Click",
+    "source": "art/third-party/kenney/rpg-audio/Audio/metalClick.ogg",
+    "license": "CC0"
+  },
+  {
+    "resource": "VFX/Muzzle",
+    "source": "art/third-party/kenney/particle-pack/PNG (Transparent)/muzzle_01.png",
+    "license": "CC0"
+  },
+  {
+    "resource": "VFX/Spark",
+    "source": "art/third-party/kenney/particle-pack/PNG (Transparent)/spark_01.png",
+    "license": "CC0"
+  },
+  {
+    "resource": "VFX/Smoke",
+    "source": "art/third-party/kenney/particle-pack/PNG (Transparent)/smoke_04.png",
+    "license": "CC0"
+  },
+  {
+    "resource": "VFX/Impact",
+    "source": "art/third-party/kenney/particle-pack/PNG (Transparent)/star_04.png",
+    "license": "CC0"
+  }
+]

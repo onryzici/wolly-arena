@@ -12,10 +12,11 @@ namespace WoollyArena.Editor
         {
             if (SessionState.GetBool(Active, false)) EditorApplication.update += StartProbe;
         }
-        [MenuItem("Woolly/Review Dodge")]
+        [MenuItem("Woolly/Review Dash")]
         public static void Run()
         {
             EditorSceneManager.OpenScene("Assets/Woolly/Scenes/TrainingArena.unity");
+            Object.FindAnyObjectByType<EnemySpawnDirector>().survivalMode = false;
             EditorWindow.GetWindow(typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView")).Focus();
             SessionState.SetBool(Active, true);
             EditorApplication.update -= StartProbe;

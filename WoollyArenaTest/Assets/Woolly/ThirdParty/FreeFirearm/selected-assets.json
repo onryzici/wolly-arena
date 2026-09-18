@@ -1,0 +1,56 @@
+[
+  {
+    "resource": "Audio/SFX/Revolver0",
+    "source": "1917/B_16P.wav",
+    "source_sha256": "3ca70be2422b3ff36710952acb626f1dfef1c923e236c28474f8a77b7d229139",
+    "start_seconds": 0.604,
+    "duration": 0.55,
+    "peak": 0.78,
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Revolver1",
+    "source": "1917/B_24P.wav",
+    "source_sha256": "6e0ec58bc70c39d68afdc7dc9e6d100ef6394eb7f4ab9671385d468b3b14b931",
+    "start_seconds": 1.3051,
+    "duration": 0.55,
+    "peak": 0.78,
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Repeater0",
+    "source": "AR-15/D_24P.wav",
+    "source_sha256": "4c6a54ca0583150bbb32b7f658bc64da9ad9ba42fd3aca769c6120b44af8d3f0",
+    "start_seconds": 0.5459,
+    "duration": 0.33,
+    "peak": 0.78,
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Repeater1",
+    "source": "AR-15/D_32P.wav",
+    "source_sha256": "acee9d2106b68fe5956225a19d7aedf943d97793817f9bda9d486a2b74b0a812",
+    "start_seconds": 0.7007,
+    "duration": 0.33,
+    "peak": 0.78,
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Shotgun0",
+    "source": "CD/H_16P.wav",
+    "source_sha256": "03c0d9a02de35dde915f5f2bc5390f7fc1a9f7b0f3c97d540b700cc2ca2d041c",
+    "start_seconds": 0.6039,
+    "duration": 0.75,
+    "peak": 0.78,
+    "license": "CC0"
+  },
+  {
+    "resource": "Audio/SFX/Shotgun1",
+    "source": "CD/H_21P.wav",
+    "source_sha256": "29d1565cf449bc0e61e5d4b8090a1212faa3d1060df243bffb3ccc1d21cbc26a",
+    "start_seconds": 0.4614,
+    "duration": 0.75,
+    "peak": 0.78,
+    "license": "CC0"
+  }
+]

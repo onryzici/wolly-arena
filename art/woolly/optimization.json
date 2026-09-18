@@ -1,0 +1,12 @@
+{
+  "vertices_before": 27700,
+  "vertices_after": 14405,
+  "triangles": 28830,
+  "bones": 28,
+  "uv_preserved": true,
+  "frames": [
+    1,
+    17
+  ],
+  "unweighted_vertices": 0
+}

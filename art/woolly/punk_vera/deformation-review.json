@@ -1,0 +1,20 @@
+{
+  "Idle": {
+    "minimum_sole_height": 0.007999947294592857,
+    "max_sole_length_error": 1.1146992950905599e-07,
+    "samples": 97,
+    "contact_height_difference": 1.601874828338623e-07,
+    "foot_drift": 8.024520884654677e-08,
+    "torso_lean_degrees": 4.547796742152978e-06
+  },
+  "Walk": {
+    "minimum_sole_height": 0.01698649302124977,
+    "max_sole_length_error": 2.985080448936195e-07,
+    "samples": 51
+  },
+  "Run": {
+    "minimum_sole_height": 0.012541765347123146,
+    "max_sole_length_error": 2.323703618412054e-07,
+    "samples": 33
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "Idle": {
+    "minimum_sole_height": 0.00799857173115015,
+    "sole_stretch": 1.5092285565732055e-07,
+    "mesh_loop_seam": 0.0,
+    "foot_drift": 1.5680613360606137e-06,
+    "contact_difference": 1.173466444015503e-06,
+    "woolly_direction_error": 8.8067482310769e-07,
+    "duration_seconds": 3
+  },
+  "Walk": {
+    "minimum_sole_height": 0.015060840174555779,
+    "sole_stretch": 1.7992962819679548e-07,
+    "mesh_loop_seam": 0.0
+  },
+  "Run": {
+    "minimum_sole_height": 0.011389560997486115,
+    "sole_stretch": 1.851634965355231e-07,
+    "mesh_loop_seam": 0.0
+  }
+}

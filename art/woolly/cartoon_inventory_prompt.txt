@@ -1,0 +1,12 @@
+Generated with built-in image_gen on 2026-09-17.
+Project asset: Assets/Woolly/Resources/CombatArt/CartoonInventory.png
+Grid: 5 columns x 5 rows, top-to-bottom; genuine alpha preserved. Sprite regions are created by ArenaIcon.
+
+Use case: stylized-concept. Asset type: production game inventory sprite atlas, ONE square PNG with a strictly aligned 5 by 5 grid of 25 isolated icons. Genuine transparent alpha background; no labels, text, grid lines, frames, tiles, cast shadow backdrop or checkerboard. Each icon fully within its own equal square cell, centered at cell center, occupying 70% of cell width/height, generous transparent gutters. Consistent polished cartoon mobile roguelite / cute sheep cowboy in warm painted desert canyon. Thick warm dark brown outlines, hand-painted cel shading, rounded chunky toy-like silhouettes, amber rim light, rich saturated accents, readable at 48px, slight three-quarter perspective. NOT flat geometric UI pictograms, not photorealistic. Single cohesive illustration style.
+EXACT cell order, left to right:
+Row 1: chunky brass six-shooter revolver with brown wood grip; long western lever-action repeater rifle; short double barrel shotgun with thick wooden stock; purple magical swirling galaxy orb encased in brass claws; blue electric coil with bright cyan lightning.
+Row 2: fiery orange meteor star with a short flame tail; cream wool padded vest; pair of chunky brown desert boots; brass telescopic rifle sight; ornate mechanical brass trigger mechanism.
+Row 3: small wooden barrel of red gunpowder with fuse; teal round water canteen with leather strap; gold harvest charm shaped like wheat; stacked steel armor plates with brass rivets; curved ivory monster fang on leather cord.
+Row 4: cheerful green desert sprout; shiny red heart; crossed cartoon steel daggers for damage stat; golden winged lightning bolt for attack speed; single speedy boot with two short motion trails for movement speed.
+Row 5: blue steel shield for armor; red-and-gold crosshair target for critical hit chance; green healing potion with a tiny heart for regeneration; golden wheat bundle for harvesting stat; stack of shiny gold coins.
+Every slot contains ONLY its specified object. Render all 25 icons at equal perceived visual size and detail. Background alpha zero between icons. No white background.

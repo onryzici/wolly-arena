@@ -1,0 +1,22 @@
+{
+  "active_action": "Idle_Revolver_Aim_3s",
+  "duration_seconds": 3,
+  "fps": 24,
+  "frames": [
+    1,
+    72
+  ],
+  "seam_key": 73,
+  "prop_parts": 26,
+  "parent_bone": "mixamorig:RightHand",
+  "attachment_loop_matrix_error": 0.0,
+  "preserved_actions": [
+    "Idle_Breathing_3s",
+    "Idle_Revolver_Aim_3s",
+    "Running",
+    "Running.001",
+    "Running_Feet_Flatter_V2",
+    "Running_NaturalContact_V5",
+    "Running_SoleContact_V4"
+  ]
+}
