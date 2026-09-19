@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace WoollyArena
 {
-    // Vector UI shares the arena's blue controls and needs no runtime texture allocations.
+    // Flat arena controls share the combat HUD palette without texture allocations.
     public sealed class DodgeButton : MaskableGraphic, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
     {
         public ArenaPlayer player;
@@ -26,7 +26,7 @@ namespace WoollyArena
                 SetVerticesDirty();
             }
             label.text = remaining > 0 ? remaining.ToString("F1") + "s" : Application.isMobilePlatform ? "ATIL" : "SPACE";
-            label.color = ready ? new Color(.85f, .96f, 1) : new Color(.6f, .72f, .85f);
+            label.color = ready ? new Color(.84f, .93f, .74f) : new Color(.55f, .6f, .55f);
             transform.localScale = Vector3.one * (pointer != int.MinValue && ready ? .94f : 1);
         }
 
@@ -36,11 +36,11 @@ namespace WoollyArena
             float radius = Mathf.Min(rectTransform.rect.width, rectTransform.rect.height) * .5f;
             var center = rectTransform.rect.center;
             bool ready = player && player.CanDodge;
-            Disc(mesh, center, radius, new Color(.055f, .14f, .29f, .94f));
-            Disc(mesh, center + Vector2.up * 2, radius - 4, ready ? new Color(.13f, .4f, .68f, .92f) : new Color(.12f, .21f, .34f, .9f));
+            Disc(mesh, center, radius, new Color(.08f, .1f, .08f, .94f));
+            Disc(mesh, center + Vector2.up * 2, radius - 4, ready ? new Color(.18f, .22f, .17f, .92f) : new Color(.12f, .14f, .12f, .9f));
             float fill = player && player.Dodge ? 1 - player.Dodge.CooldownRemaining / Mathf.Max(.1f, player.Dodge.cooldown) : 1;
-            Ring(mesh, center, radius - 2, Mathf.Clamp01(fill), ready ? new Color(.47f, .84f, 1, 1) : new Color(.4f, .6f, .83f, .7f));
-            var ink = ready ? new Color(.8f, .94f, 1) : new Color(.36f, .46f, .6f);
+            Ring(mesh, center, radius - 2, Mathf.Clamp01(fill), ready ? new Color(.67f, .88f, .42f, 1) : new Color(.4f, .5f, .36f, .7f));
+            var ink = ready ? new Color(.84f, .93f, .74f) : new Color(.36f, .46f, .34f);
             for (int i = 0; i < 2; i++)
             {
                 var p = center + new Vector2(-18 + i * 22, 6);

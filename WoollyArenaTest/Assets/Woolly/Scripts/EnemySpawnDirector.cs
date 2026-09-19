@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 namespace WoollyArena {
-public sealed class EnemySpawnDirector:MonoBehaviour {
+public sealed partial class EnemySpawnDirector:MonoBehaviour {
  public EnemyAgent prefab;public Transform player;public int maxEnemies=4;public float respawnDelay=3;public Vector3[] spawnPoints;public List<EnemyAgent> Enemies=new List<EnemyAgent>();
  public bool survivalMode=true; public SurvivalRun Run{get;private set;}
  public int AgentTypeId{get;private set;}public ShotEffects Effects{get;private set;}float nextSpawn;int serial,lastPoint=-1;NavMeshData navigationData;NavMeshDataInstance navigationInstance;
@@ -39,9 +39,15 @@ public sealed class EnemySpawnDirector:MonoBehaviour {
   for(int i=0;i<attempts;i++){int index=(start+i)%spawnPoints.Length;if(index==lastPoint)continue;var candidate=spawnPoints[index];if(survivalMode&&i>=spawnPoints.Length){var spread=Random.insideUnitCircle*1.8f;candidate+=new Vector3(spread.x,0,spread.y);}if(!NavMesh.SamplePosition(candidate,out var navPoint,.75f,NavMesh.AllAreas))continue;var p=navPoint.position;
    if(player&&Vector3.Distance(player.position,p)<3)continue;bool occupied=false;foreach(var e in Enemies)if(e&&Vector3.Distance(e.transform.position,p)<1.5f)occupied=true;
    if(occupied||Physics.CheckCapsule(p+Vector3.up*.4f,p+Vector3.up*1.35f,.32f,1,QueryTriggerInteraction.Ignore))continue;
-   var bot=Instantiate(prefab,p,Quaternion.identity,transform);bot.name="Enemy "+(++serial);int slot=0;while(Enemies.Exists(e=>e&&e.CombatSlot==slot))slot++;bot.CombatSlot=slot;bot.target=player;bot.director=this;bot.vitals.displayName="RAIDER "+serial;if(survivalMode){
+   SpawnAt(p,boss);lastPoint=index;return true;
+  }return false;
+ }
+ EnemyAgent SpawnAt(Vector3 p,bool boss,int squad=0,int sector=-1){
+   var bot=Instantiate(prefab,p,Quaternion.identity,transform);bot.name="Enemy "+(++serial);int slot=0;while(Enemies.Exists(e=>e&&e.CombatSlot==slot))slot++;bot.CombatSlot=slot;bot.target=player;bot.director=this;bot.SquadId=squad;bot.SpawnSector=sector;bot.vitals.displayName="RAIDER "+serial;if(survivalMode){
     bot.melee=true;int wave=Run.Wave;int kind=boss?(wave%10==0?5:4):(serial-1)%4;
+    bot.GetComponent<HitReaction>().impulseCooldown=RunBalance.StaggerCooldown(wave);
     if(!boss&&kind==3&&Enemies.FindAll(e=>e&&!e.Defeated&&e.LaserRanged).Count>=Mathf.Min(4,1+wave/5))kind=0;
+    bot.Role=EnemyTactics.Role(kind,slot,boss);
     bot.moveSpeed=(2.3f+Mathf.Min(1.2f,(wave-1)*.07f)+WaveDifficulty.SpeedBonus(wave))*(kind==1?1.4f:kind==2?.7f:boss?.78f:1);
     bot.shotDamage=8+wave+WaveDifficulty.DamageBonus(wave)+(kind==2?5:boss?8:0);
     bot.vitals.displayName=new[]{"İSKELET AKINCI","GÖLGE AVCISI","KEMİK SAVAŞÇI","KEMİK BÜYÜCÜ","İSKELET MUHAFIZI","BAŞ BÜYÜCÜ"}[kind];
@@ -51,12 +57,12 @@ public sealed class EnemySpawnDirector:MonoBehaviour {
      bot.moveSpeed*=.85f;bot.gameObject.AddComponent<LaserEnemy>().Initialize(bot,true);
     }
     if(boss){bot.ConfigureBoss();bot.gameObject.AddComponent<BossEnemy>().Initialize(bot,kind==5);}
+    else if(kind!=3){int elites=0;foreach(var enemy in Enemies)if(enemy&&!enemy.Defeated&&enemy.IsElite)elites++;if(WavePressure.EliteSpawn(wave,serial,elites))bot.gameObject.AddComponent<EliteEnemy>().Initialize(bot);}
    }
    bot.nameLabel.text=bot.vitals.displayName;bot.healthLabel.text=bot.vitals.Health.ToString();
-   Enemies.Add(bot);lastPoint=index;return true;
-  }return false;
+   Enemies.Add(bot);return bot;
  }
- void Update(){if(survivalMode)return;int removed=Enemies.RemoveAll(e=>!e);if(removed>0)nextSpawn=Time.time+respawnDelay;if(Enemies.Count<maxEnemies&&Time.time>=nextSpawn){Spawn();nextSpawn=Time.time+respawnDelay;}}
- void OnDestroy(){if(navigationInstance.valid)navigationInstance.Remove();if(navigationData)Destroy(navigationData);}
+ void Update(){if(survivalMode){TickSquads();return;}int removed=Enemies.RemoveAll(e=>!e);if(removed>0)nextSpawn=Time.time+respawnDelay;if(Enemies.Count<maxEnemies&&Time.time>=nextSpawn){Spawn();nextSpawn=Time.time+respawnDelay;}}
+ void OnDestroy(){DestroySquads();if(navigationInstance.valid)navigationInstance.Remove();if(navigationData)Destroy(navigationData);}
 }
 }

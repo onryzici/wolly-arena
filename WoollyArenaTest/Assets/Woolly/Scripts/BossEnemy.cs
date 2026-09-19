@@ -17,7 +17,7 @@ namespace WoollyArena {
    material.SetColor("_Tint",Color.Lerp(new Color(1,.75f,.2f,.55f),new Color(1,.22f,.15f,.95f),u));
    for(int i=0;i<65;i++){float a=i*Mathf.PI/32;ring.SetPosition(i,center+new Vector3(Mathf.Cos(a),0,Mathf.Sin(a))*Radius);}
    if(Time.time<impactAt)return;
-   winding=false;agent.AttackWindup=false;ring.enabled=false;nextAttack=Time.time+(queen?3.8f:4.8f);
+   winding=false;agent.AttackWindup=false;ring.enabled=false;nextAttack=Time.time+(queen?3.8f:4.8f)*(agent.vitals.Health<agent.vitals.maxHealth*.5f?.72f:1);
    var delta=agent.target.position-center;delta.y=0;
    if(delta.sqrMagnitude<Radius*Radius){var vitals=agent.target.GetComponent<CharacterVitals>();if(vitals.Damage(agent.shotDamage+6,delta.normalized))vitals.ProtectFor(.4f);}
    // Fixed pooled spray announces the impact without introducing persistent physics objects.

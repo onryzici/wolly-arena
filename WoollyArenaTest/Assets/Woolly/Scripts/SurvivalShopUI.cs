@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace WoollyArena
 {
-    public sealed class SurvivalShopUI : MonoBehaviour
+    public sealed partial class SurvivalShopUI : MonoBehaviour
     {
         SurvivalRun run;
         TMP_FontAsset font;
@@ -47,15 +47,17 @@ namespace WoollyArena
         TMP_Text[] statValues=new TMP_Text[8];
         TMP_FontAsset runtimeFont;
         Sprite rounded; Texture2D roundedTexture;
-        readonly Color backdrop = new Color32(31, 34, 64, 255), surface = new Color32(49, 53, 77, 255);
+        readonly Color backdrop = new Color32(27, 29, 29, 255), surface = new Color32(43, 47, 44, 255);
         readonly Color ink = new Color32(246, 237, 213, 255), gold = new Color32(255, 199, 98, 255), muted = new Color32(173, 190, 198, 255);
-        readonly Color mint = new Color32(125, 219, 185, 255), sky = new Color32(180, 221, 244, 255), amber = new Color32(255, 202, 100, 255);
+        readonly Color mint = new Color32(170, 225, 108, 255), sky = new Color32(180, 221, 244, 255), amber = new Color32(255, 202, 100, 255);
         public void Initialize(SurvivalRun owner)
         {
             run = owner;
             var hud = Object.FindAnyObjectByType<ArenaHUD>(); font = hud.ammo.font;
+            var survivorFont=Resources.Load<Font>("SurvivorSen");
+            if(survivorFont){runtimeFont=TMP_FontAsset.CreateFontAsset(survivorFont);font=runtimeFont;}
             // Preserve Turkish glyphs even when the scene font is a static Latin atlas.
-            if(!font.HasCharacters("ÇçĞğİıÖöŞşÜü") && font.sourceFontFile){runtimeFont=TMP_FontAsset.CreateFontAsset(font.sourceFontFile);runtimeFont.TryAddCharacters("ÇçĞğİıÖöŞşÜü");font=runtimeFont;}
+            if(!runtimeFont && !font.HasCharacters("ÇçĞğİıÖöŞşÜü") && font.sourceFontFile){runtimeFont=TMP_FontAsset.CreateFontAsset(font.sourceFontFile);runtimeFont.TryAddCharacters("ÇçĞğİıÖöŞşÜü");font=runtimeFont;}
             var canvas = hud.GetComponent<Canvas>(); canvas.sortingOrder = 100;
             var safe = canvas.transform.Find("SafeArea"); if (!safe) safe = canvas.transform;
             // Remove the overlapping training readouts before constructing the survival HUD.
@@ -64,26 +66,7 @@ namespace WoollyArena
                 if(!string.IsNullOrEmpty(label.text) && (label.text.Contains("WOOLLY /") || label.text.Contains("MOVEMENT +") || label.text.StartsWith("WASD") || label.text.StartsWith("LEFT"))) label.gameObject.SetActive(false);
             foreach(var button in hud.GetComponentsInChildren<UnityEngine.UI.Button>(true))
                 if(button.GetComponent<ArenaLobbyReturn>() || button.name.ToLowerInvariant().Contains("lobby")) button.gameObject.SetActive(false);
-            var healthCard=Box(safe,"Health Card",.025f,.875f,.235f,.975f,Color.clear).transform;
-            Icon(healthCard,"MaxHealth",.02f,.48f,.16f,.98f);
-            healthLabel=Text(healthCard,"Health Value",.18f,.45f,.94f,.95f,"",24,TextAlignmentOptions.MidlineLeft);
-            var healthTrack=Box(healthCard,"Health Track",.08f,.20f,.92f,.36f,surface);
-            healthFill=Box(healthTrack.transform,"Health Fill",0,0,1,1,new Color32(245,111,101,255));
-            var timerCard=Box(safe,"Wave Clock",.445f,.866f,.555f,.98f,Color.clear).transform;
-            waveLabel=Text(timerCard,"Wave Label",.05f,.64f,.95f,.97f,"",15);waveLabel.color=muted;
-            header=Text(timerCard,"Time",.04f,.15f,.96f,.72f,"",34);header.fontStyle=FontStyles.Bold;
-            var timerTrack=Box(timerCard,"Timer Track",.12f,.08f,.88f,.12f,surface);
-            waveFill=Box(timerTrack.transform,"Time Remaining",0,0,1,1,gold);
-            var wallet=Box(safe,"Wallet Card",.77f,.875f,.895f,.975f,Color.clear).transform;
-            Icon(wallet,"coin",.02f,.23f,.35f,.84f);
-            walletLabel=Text(wallet,"Gold Value",.34f,.18f,1f,.88f,"",28);walletLabel.fontStyle=FontStyles.Bold;
-            levelLabel=Text(safe,"Level",.027f,.843f,.23f,.874f,"",14,TextAlignmentOptions.MidlineLeft);
-            var xpTrack=Box(safe,"Experience Track",.025f,.838f,.235f,.843f,surface);
-            experienceFill=Box(xpTrack.transform,"Experience Fill",0,0,1,1,mint);
-            combatHud=new[]{healthCard.gameObject,timerCard.gameObject,wallet.gameObject,levelLabel.gameObject,xpTrack.gameObject};
-            var pauseButton = Button(safe, "Pause Run", .918f, .928f, .973f, .985f, "II", 28);
-            pauseButton.GetComponent<UnityEngine.UI.Image>().color=Color.clear;
-            pauseButton.onClick.AddListener(() => run.SetPaused(true));
+            CreateCombatHud(safe);
             var celebration=Box(safe,"Wave Clear",.16f,.42f,.84f,.66f,Color.clear);
             clearBanner=celebration.gameObject.AddComponent<CanvasGroup>();clearBanner.blocksRaycasts=false;
             clearTitle=Text(celebration.transform,"Wave Cleared",0,.36f,1,1,"DALGA TEMİZLENDİ",56);clearTitle.color=gold;clearTitle.fontStyle=FontStyles.Bold;
@@ -124,7 +107,7 @@ namespace WoollyArena
                 // Separate vertical bands: title, art, readable effects, then the purchase action.
                 cardNames[i] = Text(t, "Name", .04f, .83f, .96f, .96f, "", 23);
                 cardNames[i].fontStyle=FontStyles.Bold;
-                offerIcons[i]=Icon(t,"empty",.20f,.54f,.76f,.81f);
+                offerIcons[i]=Icon(t,"empty",.09f,.53f,.86f,.82f);
                 tiers[i] = Text(t, "Tier", .79f, .67f, .97f, .81f, "", 18);
                 cardDescriptions[i] = Text(t, "Description", .05f, .235f, .95f, .52f, "", 19);
                 offerActions[i]=Box(t,"Purchase Area",.05f,.035f,.95f,.205f,gold);
@@ -182,6 +165,7 @@ namespace WoollyArena
             foreach(var action in new[]{next,reroll,resume,soundButton,lobby}) Label(action).color=new Color32(27,35,43,255);
             pausePanel.SetActive(false);
             CreateResultScreen(safe);
+            CreateLevelScreen(safe);
             if (run.Player.mobile)
             {
                 run.Player.mobile.aim.gameObject.SetActive(false);
@@ -232,7 +216,8 @@ namespace WoollyArena
             healthLabel.text = $"{v.Health}<size=65%> / {v.maxHealth}</size>";
             healthFill.rectTransform.anchorMax = new Vector2(Mathf.Clamp01((float)v.Health/v.maxHealth),1);
             walletLabel.text = run.Materials.ToString();
-            levelLabel.text = $"SV. {run.Build.Level}";
+            levelLabel.text = $"SEV. {run.Build.Level}";
+            UpdateHudDetails();
             experienceFill.rectTransform.anchorMax = new Vector2(Mathf.Clamp01((float)run.Build.Experience/run.Build.NextLevelXP),1);
 
         }
@@ -248,11 +233,13 @@ namespace WoollyArena
         {
             bool finished=run.Phase==SurvivalRun.RunPhase.Defeat||run.Phase==SurvivalRun.RunPhase.Victory;
             resultPanel.SetActive(finished);
+            levelPanel.SetActive(run.Phase==SurvivalRun.RunPhase.LevelUp);
             if(finished){ShowResult();return;}
             bool clearing=run.Phase==SurvivalRun.RunPhase.WaveClear;
             clearBanner.gameObject.SetActive(clearing);
             if(clearing){panel.SetActive(false);foreach(var piece in combatHud)piece.SetActive(false);clearBanner.transform.SetAsLastSibling();return;}
             var build = run.Build; bool level = run.Phase == SurvivalRun.RunPhase.LevelUp, shop = run.Phase == SurvivalRun.RunPhase.Upgrade;
+            if(level){panel.SetActive(false);foreach(var piece in combatHud)piece.SetActive(false);RefreshLevelScreen();return;}
             if(!shop)selectedGear=null;
             var selectedCollection=selectedItem?build.Items:build.Weapons;
             selected=selectedGear==null?-1:selectedCollection.IndexOf(selectedGear);
@@ -305,7 +292,7 @@ namespace WoollyArena
             }
             var rerollRect=(RectTransform)reroll.transform;rerollRect.anchorMin=new Vector2(level?.35f:.244f,.035f);rerollRect.anchorMax=new Vector2(level?.65f:.47f,.125f);
             inventory.SetActive(shop || ended);
-            equipmentTitle.text = $"SİLAHLAR {build.Weapons.Count}/6 · Aynı silah ve seviyeyi birleştir";
+            equipmentTitle.text = build.FamilySummary();
             for (int i = 0; i < 6; i++)
             {
                 var gear = i < build.Weapons.Count ? build.Weapons[i] : null;
@@ -331,7 +318,7 @@ namespace WoollyArena
             nextItems.interactable = shop && (itemPage + 1) * 4 < build.Items.Count;
             var collection = selectedItem ? build.Items : build.Weapons;
             var selection = selected >= 0 && selected < collection.Count ? collection[selected] : null;
-            details.text = selection == null ? "İncelemek için bir eşya seç." : selection.Item.Name + "  " + selection.Tier + "\n" + selection.Item.Description(selection.Tier).Replace("\n", " · ");
+            details.text = selection == null ? "2 / 4 aynı aileden silah: build bonusu. Ayrıntılar için silaha dokun." : selection.Item.Name + "  " + RunCatalog.TierName(selection.Tier) + "\n" + (selection.Item.IsWeapon ? build.FamilyDescription(WeaponArsenal.Profile(selection.Item.Weapon.Value).Family) : selection.Item.Description(selection.Tier).Replace("\n", " · "));
             combine.interactable = shop && !selectedItem && build.CanCombine(selected);
             sell.interactable = shop && selection != null && (selectedItem || build.Weapons.Count > 1);
             combine.gameObject.SetActive(shop&&selection!=null&&!selectedItem);
@@ -415,11 +402,11 @@ namespace WoollyArena
             var go = new GameObject(name, typeof(RectTransform)); var text = go.AddComponent<TextMeshProUGUI>(); var r = text.rectTransform;
             r.SetParent(parent, false); r.anchorMin = new Vector2(x0, y0); r.anchorMax = new Vector2(x1, y1); r.offsetMin = new Vector2(6, 3); r.offsetMax = new Vector2(-6, -3);
             text.font = font; text.text = value; text.fontSize = size; text.enableAutoSizing = true; text.fontSizeMin = size * .72f; text.fontSizeMax = size;
-            text.alignment = alignment; text.color = ink; text.outlineColor=new Color32(44,25,24,230);text.outlineWidth=.18f; text.raycastTarget = false; return text;
+            text.alignment = alignment; text.color = ink; text.outlineColor=new Color32(44,25,24,230);text.outlineWidth=0; text.raycastTarget = false; return text;
         }
         UnityEngine.UI.Button Button(Transform parent, string name, float x0, float y0, float x1, float y1, string value, int size, bool createLabel = true)
         {
-            var image = Box(parent, name, x0, y0, x1, y1, Color.white); image.raycastTarget = true;image.sprite=MenuSkin.Get("Blue")??Rounded();
+            var image = Box(parent, name, x0, y0, x1, y1, Color.white); image.raycastTarget = true;image.sprite=Rounded();image.color=surface;
             var button = image.gameObject.AddComponent<UnityEngine.UI.Button>(); button.targetGraphic = image;
             var colors = button.colors; colors.highlightedColor = new Color(1, .96f, .87f); colors.pressedColor = new Color(.84f, .9f, .92f); colors.disabledColor = new Color(.82f, .82f, .79f); button.colors = colors;
             var outline = image.gameObject.AddComponent<UnityEngine.UI.Outline>(); outline.effectColor=new Color(0,0,0,.45f);outline.effectDistance=new Vector2(0,-3);

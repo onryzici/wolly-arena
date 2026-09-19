@@ -15,7 +15,7 @@ namespace WoollyArena {
   public static string PowerDescription(int id)=>id==1?"Dash: 2 sn +%25 saldırı hızı · 8 sn bekleme":"Dash: kısa kalkan ve yakın darbe · 8 sn bekleme";
   public static int LevelGrowth(int id,RunStat stat,int level)=>(id==0||id==2)&&stat==RunStat.MaxHealth?Math.Max(0,level-1)*2:id==1&&stat==RunStat.AttackSpeed?Math.Max(0,level-1):0;
   public static string GrowthDescription(int id)=>id==1?"Her seviye +%1 saldırı hızı":"Her seviye +2 azami can";
-  public static string DisplayValue(RunStat stat,int value)=>stat==RunStat.Damage||stat==RunStat.AttackSpeed||stat==RunStat.MoveSpeed?(100+value)+"%":stat==RunStat.Critical?value+"%":value.ToString();
+  public static string DisplayValue(RunStat stat,int value)=>stat==RunStat.AttackSpeed?(int)Math.Round(RunBalance.AttackMultiplier(value)*100)+"%":stat==RunStat.Damage||stat==RunStat.MoveSpeed?(100+value)+"%":stat==RunStat.Critical?value+"%":value.ToString();
   public static int BaseStat(int id,RunStat stat){
    int value=stat==RunStat.MaxHealth?100:stat==RunStat.Critical||stat==RunStat.Harvesting?5:0;
    if((id==0||id==2)&&stat==RunStat.Armor)value+=2;

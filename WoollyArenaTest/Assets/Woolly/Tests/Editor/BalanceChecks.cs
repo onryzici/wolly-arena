@@ -35,7 +35,7 @@ namespace WoollyArena.Editor {
    }
    // Repeatable full-run sensitivity analysis. Kill counts are inputs, not measured gameplay.
    foreach(int baseKills in new[]{15,30,45}) {
-    double levels=0,items=0,weapons=0,gold=0,dps=0;
+    double levels=0,items=0,weapons=0,gold=0;
     for(int seed=1;seed<=100;seed++) {
      var b=new SurvivalBuild(seed);var rng=new Random(seed);int earned=0;
      for(int wave=1;wave<=19;wave++) {
@@ -50,13 +50,10 @@ namespace WoollyArena.Editor {
        if(round==0&&!b.Reroll())break;
       }
      }
-     double raw=0;
-     foreach(var weapon in b.Weapons){int kind=(int)weapon.Item.Weapon.Value;if(kind<3)raw+=(kind==0?25/.4:kind==1?10/.14:39/.65)*RunItem.TierScale(weapon.Tier);}
-     for(int kind=0;kind<3;kind++){int level=b.PowerLevel(kind);if(level>0)raw+=25*(kind==0?1.8:kind==1?1.1:3)*(1+.3*(level-1))/Math.Max(.8,(kind==0?3.2:kind==1?2:2.8)-(level-1)*.25);}
-     dps+=raw*b.DamageMultiplier*b.AttackMultiplier*(1+b.Stat(RunStat.Critical)/100.0);
+     // Combat timing, heat, ailments and plating require the real ArsenalReview scene benchmark.
      levels+=b.Level;items+=b.Items.Count;weapons+=b.Weapons.Count;gold+=earned;
     }
-    Console.WriteLine($"SENSITIVITY kills/wave={baseKills}+2w, 100 seeds before final: level {levels/100:F1}, passive items {items/100:F1}, weapon slots {weapons/100:F1}, dropped gold {gold/100:F1}, ideal single-target DPS {dps/100:F1}, final boss nominal seconds {WaveDifficulty.BossHealth(20)/(dps/100):F1}");
+    Console.WriteLine($"SENSITIVITY kills/wave={baseKills}+2w, 100 seeds before final: level {levels/100:F1}, passive items {items/100:F1}, weapon slots {weapons/100:F1}, dropped gold {gold/100:F1}");
    }
   }
  }

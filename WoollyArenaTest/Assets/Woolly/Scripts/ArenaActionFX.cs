@@ -29,7 +29,7 @@ namespace WoollyArena {
   public void Accent(CombatAccent kind,Vector3 at,Vector3 direction=default){if(accents)accents.Play(kind,at,direction);}
 
   public void Burst(Vector3 at,Color color,int count=12){
-   var hit=impacts[impactCursor++%impacts.Length];hit.root.position=at;hit.life=.28f;hit.color=color;hit.size=count>=20?.65f:count>=10?.36f:.20f;hit.root.localScale=Vector3.one*hit.size;hit.face.enabled=true;hit.ring.enabled=true;
+   var hit=impacts[impactCursor++%impacts.Length];hit.root.position=at;hit.life=.28f;hit.color=color;hit.size=count>=20?.8f:count>=10?.48f:.27f;hit.root.localScale=Vector3.one*hit.size;hit.face.enabled=true;hit.ring.enabled=true;
    if(view)hit.root.rotation=view.transform.rotation*Quaternion.Euler(0,0,Random.Range(0,360));
    tint.SetColor("_Tint",Color.white);hit.face.SetPropertyBlock(tint);
    for(int i=0;i<Mathf.Min(count,32);i++){var f=sparks[cursor++%sparks.Length];f.position=at;f.velocity=Random.onUnitSphere*Random.Range(1.5f,4);f.life=f.maxLife=Random.Range(.16f,.4f);f.color=color;f.line.SetPosition(0,at);f.line.SetPosition(1,at);f.line.enabled=true;}

@@ -30,7 +30,7 @@ namespace WoollyArena
         }
         void Update()
         {
-            if (!player || !run || run.Phase != SurvivalRun.RunPhase.Wave || player.CombatPaused || player.GetComponent<CharacterVitals>().Health <= 0) return;
+            if (!player || !run || run.IsPaused || run.Phase != SurvivalRun.RunPhase.Wave || player.CombatPaused || player.GetComponent<CharacterVitals>().Health <= 0) return;
             for (int i = 0; i < 3; i++)
             {
                 if (pending[i] && Time.time >= impactAt[i]) { pending[i] = false; Impact(i, targets[i]); }
@@ -38,6 +38,7 @@ namespace WoollyArena
                 var target = player.FindTarget();
                 if (!target) continue;
                 Casts++;run.Sfx.Play(CombatCue.Power);
+                if(player.Loadout)player.Loadout.AnimatePower(i);
                 targets[i] = target.transform.position;
                 Effects.Play(i, player.Loadout ? player.Loadout.PowerOrigin(i) : player.transform.position + Vector3.up, targets[i], i == 0 ? 1.35f : 1);
                 impactAt[i] = Time.time + (i == 1 ? .08f : .28f);
@@ -64,7 +65,7 @@ namespace WoollyArena
                         if (visited) continue;
                         float d = Vector3.Distance(origin, enemy.transform.position);
                         if (d >= distance) continue;
-                        if (jump > 0 && Physics.Linecast(origin + Vector3.up * 1.8f, enemy.transform.position + Vector3.up * 1.8f, 1, QueryTriggerInteraction.Ignore)) continue;
+                        if (jump > 0 && !CombatSight.Clear(origin + Vector3.up * .65f, enemy.transform.position + Vector3.up * enemy.AimHeight)) continue;
                         nearest = enemy; distance = d;
                     }
                     if (!nearest) break;
@@ -77,9 +78,10 @@ namespace WoollyArena
             }
             else
             {
-                float radius = kind == 0 ? 2.7f : 1.25f;
+                float radius = (kind == 0 ? 2.7f : 1.25f)*run.Build.AreaMultiplier;
                 foreach (var enemy in director.Enemies)
-                    if (enemy && !enemy.Defeated && enemy.isActiveAndEnabled && Vector3.Distance(enemy.transform.position, position) <= radius)
+                    if (enemy && !enemy.Defeated && enemy.isActiveAndEnabled && Vector3.Distance(enemy.transform.position, position) <= radius
+                        && CombatSight.Clear(position+Vector3.up*.65f,enemy.transform.position+Vector3.up*enemy.AimHeight))
                         enemy.Damage(damage, enemy.transform.position - position, player.Stats && player.Stats.LastCritical);
             }
         }

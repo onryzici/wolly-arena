@@ -30,9 +30,9 @@ namespace WoollyArena
             player.shotDamage = Mathf.Max(1, Mathf.RoundToInt(25 * Build.DamageMultiplier));
             player.weapon.Interval = .28f / Build.AttackMultiplier;
         }
-        public int RollDamage(float baseDamage)
+        public int RollDamage(float baseDamage, int criticalBonus = 0)
         {
-            bool critical = Random.value * 100 < Build.Stat(RunStat.Critical);
+            bool critical = Random.value * 100 < Mathf.Min(75, Build.Stat(RunStat.Critical) + criticalBonus);
             LastCritical = critical;
             if (critical) CriticalHits++;
             return Mathf.Max(1, Mathf.RoundToInt(baseDamage * Build.DamageMultiplier * (critical ? 2 : 1)));

@@ -2,6 +2,14 @@
 
 Yatay mobil ekran için Unity hayatta kalma / otomatik saldırı prototipi. Oyuncu hareket ve dash kontrolünü kullanır; hedef seçimi, ateş ve satın alınan özel güçler otomatik çalışır.
 
+19 Eylül güncellemesi: **20 silah, dört build ailesi, yeni saldırı animasyonları, element efektleri ve iskelet parçalanması**. Silah listesi, bonuslar, seri tüfek dengesi ve doğrulama ayrıntıları: [Arsenal ve zorluk güncellemesi](docs/ARSENAL_AND_PRESSURE.md).
+
+Ardından savaş HUD'ı ve seviye atlama ekranı yenilendi; düşmanlara kuşatma, yol kesme, menzil koruma ve sekiz bölgeden işaretli grup doğması eklendi. Güncel davranışlar ve **268 model kontrolü**: [Survivor arayüzü ve düşman grupları](docs/SURVIVOR_UI_AND_SQUADS.md).
+
+Son görsel revizyon: 36 ayrı çizim ikon, sekiz ek ücretsiz KayKit modeli, tek renk oyuncu halkası, çarpısız doğma uyarıları ve güçlendirilmiş parçalanma/saldırı efektleri. [Görsel değişiklikler ve doğrulama](docs/INK_ART_AND_COMBAT.md).
+
+VFX düzeltmesi: alev püskürtücü dokulu animasyonlu alev akışı, balta/kılıç kısa kesme izleri kullanır; mağaza ikonları daha sade cartoon çizimlerle değiştirildi. [VFX revizyonu ve yakın plan inceleme](docs/WEAPON_VFX_REVISION.md).
+
 ## Kaynak dosyaları
 
 Blender ve GLB kaynakları Git LFS ile saklanır. Klonladıktan sonra `git lfs install` ve `git lfs pull` çalıştırın. Unity projesi `WoollyArenaTest/`, düzenlenebilir sanat kaynakları `art/`, üretim ve doğrulama araçları `tools/`, geliştirme notları `docs/` içindedir. Build çıktıları, Unity önbelleği ve yerel oyuncu kayıtları repoya dahil değildir.
@@ -19,13 +27,13 @@ Lobide **OYNA** test arenasına geçer; arenadaki **LOBİ** düğmesi geri döne
 
 ## Dalgalar, ekipman ve karakter statları
 
-20 dalgalık koşu. İlk dalga 18 saniye; süre dalga başına 1 saniye artarak 32 saniyede sınırlanır. Dalga başında düşman grubu gelir; devamında 3–6 düşmanlık gruplar 0,70–0,28 saniye aralıklarla doğmayı dener. Eşzamanlı düşman sınırı 18’den 48’e yükselir; uygun/boş doğma alanı yoksa daha az düşman gelir. Yakın dövüş düşmanları dalgalarla güçlenir. Her öldürme 3 malzeme ve 1 XP verir. XP ile kazanılan seviye seçimleri dalga sonunda çözülür; ardından mağaza açılır. Hayatta kalınan dalga sonunda **Hasat** kadar ek malzeme kazanılır.
+20 dalgalık koşu. İlk dalga 30 saniye; normal dalgalar 44 saniyeye kadar uzar, final 90 saniyedir. Eşzamanlı düşman sınırı 18’den 60’a yükselir; uygun doğma alanı yoksa daha az düşman gelir. Altıncı dalgadan sonra ek takviyeler, yedinci dalgadan sonra işaretli alan saldırıları yapan elitler gelir. Her öldürme 1 XP verir; düşen para 1 altın değerindedir ve düşme olasılığı ilerledikçe %100’den %75’e iner. XP ile kazanılan seviye seçimleri dalga sonunda çözülür; ardından mağaza açılır. Hayatta kalınan dalga sonunda **Hasat** kadar ek malzeme kazanılır.
 
 Karakterin görünür statları: maksimum can, hasar yüzdesi, saldırı hızı, hareket hızı, zırh, kritik şansı, 5 saniyelik can yenilenmesi ve hasat. Kritik isabetler 2 kat hasar verir. Pozitif zırh hasarı `1 / (1 + zırh × 0,06)` oranına indirir; negatif zırh hasarı artırır. İstatistik sınırları `SurvivalBuild.Stat` içinde belirtilmiştir.
 
-Mağazada her seferinde dört rastgele teklif bulunur. Altı silah türü ve on pasif eşya vardır; eşyalar olumlu ve olumsuz stat değişikliklerini kartta gösterir. Nadirlik I–IV arasındadır; ilerleyen dalgalarda yüksek kademeler açılır.
+Mağazada her seferinde dört rastgele teklif bulunur. 20 silah türü ve 16 pasif eşya vardır; eşyalar olumlu ve olumsuz stat değişikliklerini kartta gösterir. Nadirlik I–IV arasındadır; ilerleyen dalgalarda yüksek kademeler açılır.
 
-- **Altı silah yuvası:** Trail Revolver, Canyon Repeater ve Scattergun ayrı otomatik saldırı süreleriyle ateş eder. Galaxy Core, Storm Coil ve Falling Star önceki cartoon özel güçlerini açar; aynı güç türünün kademeleri toplanarak güç seviyesini belirler.
+- **Altı silah yuvası:** 20 tür arasından yakın dövüş, ateşli silah, element ve patlayıcı kombinasyonları kurulur. Aynı aileden 2 / 4 dolu yuva aile bonusunu açar. Galaxy Core, Storm Coil ve Falling Star özel güçlerinde aynı türün kademeleri toplanarak güç seviyesi belirlenir.
 - **Birleştirme:** Aynı tür ve kademeden iki silah bir üst kademeye birleşir ve bir yuva açar. En yüksek kademe IV. Altı yuva doluyken alınan uyumlu silah otomatik birleşir; uyumsuz alışveriş para harcamadan engellenir.
 - **Kilitleme:** Bir teklif, fiyatıyla birlikte yenilemeler ve sonraki mağaza boyunca korunur. Satın alınan teklif kilitten çıkar.
 - **Yenileme:** Ücret `2 + dalga + bu mağazada yapılan yenileme sayısı × 2`. Tüm teklifler kilitliyken yenileme kapalıdır.
@@ -50,7 +58,9 @@ Dosya `Application.persistentDataPath/survival-run-v1.sav` konumundadır. Geçic
 
 `python3 tools/validate_equipment_offline.py`, Unity Editor'ü başlatmadan mevcut runtime/Editor kaynaklarını C# derleyicisiyle geçici dizinde derler ve gerçek ekonomi modelinin bağımsız testlerini çalıştırır. Mevcut yerel Unity referansları ve Library/Bee derleyici yanıt dosyaları gerekir. Üretilen DLL'ler Editor'e yüklenmez. Rapor: `WoollyArenaTest/Logs/equipment-offline-review.txt`.
 
-Bu ekipman güncellemesinde offline derleme ve 63 ekonomi/kayıt kontrolü geçti. 17 Eylül 2026'da kullanıcının açık izniyle Unity kontrolü de çalıştırıldı: model ve sahne entegrasyonu dahil 116 kontrol geçti; mağaza üç ekran oranında render edildi. Build 5 Unity/Xcode ile derlendi, imzası doğrulandı ve bağlı iPhone 14 Pro Max'e yüklenip başlatıldı. **Telefon üzerinde tam koşu, dokunmatik kullanım, kayıt yaşam döngüsü, performans ve ses testi henüz yapılmadı.** Raporlar: `Logs/survival-review.txt`, `Logs/phone-build-report.txt`, `Logs/phone-xcode-build5.log`, `Logs/phone-install-build5.json`, `Logs/phone-launch-build5.json` (proje altında).
+19 Eylül arsenal güncellemesinde offline derleme ve **229 model kontrolü** geçti. Kullanıcının izniyle Unity'de 20 silahın isabetleri, yanma/yavaşlatma, duraklatma, mağaza, elitler, parçalanma ve seri tüfek baskı senaryoları çalıştırıldı. Güncel ayrıntılar [arsenal doğrulama notlarında](docs/ARSENAL_AND_PRESSURE.md), rapor `Logs/arsenal-runtime-review.txt` içindedir. Bu güncellemenin telefon build'i ve fiziksel cihaz testi yapılmadı.
+
+Önceki doğrulama: 17 Eylül 2026'da model ve sahne entegrasyonu dahil 116 kontrol geçti; mağaza üç ekran oranında render edildi. Build 5 Unity/Xcode ile derlendi, imzası doğrulandı ve bağlı iPhone 14 Pro Max'e yüklenip başlatıldı. **Telefon üzerinde tam koşu, dokunmatik kullanım, kayıt yaşam döngüsü, performans ve ses testi henüz yapılmadı.** Önceki raporlar: `Logs/survival-review.txt`, `Logs/phone-build-report.txt`, `Logs/phone-xcode-build5.log`, `Logs/phone-install-build5.json`, `Logs/phone-launch-build5.json` (proje altında).
 
 Kullanıcı Unity'yi açmayı istediğinde `Woolly > Review Survival`, gerçek sahnede mağaza, seviye seçimleri, altı silah, regen/zırh, 20 dalga, yenilgi/zafer ve üç ekran oranını kontrol etmek için hazırdır. Sonucu `Logs/survival-review.txt` dosyasına yazar. `Woolly > Capture Cartoon Powers` önceki VFX önizlemesini üretir.
 
@@ -58,7 +68,7 @@ Kullanıcı Unity'yi açmayı istediğinde `Woolly > Review Survival`, gerçek s
 
 `Woolly > Review Hit Reactions` gerçek atış, geri itme, siper ve NavMesh sınırı, peş peşe isabet, koruma, ölüm ve yeniden doğma kontrollerini çalıştırır. Sonuç `Logs/hit-reaction-review.txt` dosyasına yazılır; ardından temiz arena Play modunda açılır.
 
-Dash 0,22 saniyede 2,2 m ilerler; başlangıçtan itibaren 0,65 saniye bekleme ve ilk 0,18 saniye hasar koruması vardır. Takla animasyonu kullanılmaz; gövde eğilmeden koşu animasyonu korunur, iki kısa mavi-beyaz hız izi kullanılır. CharacterController siper geçişini engeller. Otomatik ekipman dash sırasında saldırmayı sürdürür. Hayatta kalma koşusu 4,8 m/sn, yürüme 1,8 m/sn; mobil çubuk koşu hızını analog olarak kontrol eder. Revolver / repeater / shotgun temel atış aralıkları 0,40 / 0,14 / 0,65 saniyedir. Galaxy / Energy / Star temel beklemeleri 3,2 / 2 / 2,8 saniyedir. Yakın dövüş hasarı sonrası 0,22 saniyelik koruma üst üste temas hasarını sınırlar.
+Dash 0,22 saniyede 2,2 m ilerler; başlangıçtan itibaren 0,65 saniye bekleme ve ilk 0,18 saniye hasar koruması vardır. Takla animasyonu kullanılmaz; gövde eğilmeden koşu animasyonu korunur, iki kısa mavi-beyaz hız izi kullanılır. CharacterController siper geçişini engeller. Otomatik ekipman dash sırasında saldırmayı sürdürür. Hayatta kalma koşusu 4,8 m/sn, yürüme 1,8 m/sn; mobil çubuk koşu hızını analog olarak kontrol eder. Revolver / repeater / shotgun temel atış aralıkları 0,40 / 0,17 / 0,65 saniyedir; repeater 18 atıştan sonra 1,35 saniye soğur. Galaxy / Energy / Star temel beklemeleri 3,2 / 2 / 2,8 saniyedir. Yakın dövüş hasarı sonrası 0,22 saniyelik koruma üst üste temas hasarını sınırlar.
 
 Mevcut sahne referanslarını korumak için bileşen adı `DodgeAbility` olarak kaldı. `Woolly > Review Dash` artık dash davranışına göre güncellenmiştir; **Build 6 sonrası dash revizyonu ve açık renkli menüler Unity’de veya telefonda henüz çalıştırılmadı**. Offline derleme ve mevcut 63 ekonomi/kayıt kontrolü geçti; bunlar dash hareketi ya da telefon performansı testi değildir. Build 5 ve 116 Unity kontrolü önceki tempoya aittir.
 

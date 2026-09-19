@@ -5,7 +5,8 @@ using UnityEngine;
 namespace WoollyArena
 {
     public enum RunStat { MaxHealth, Damage, AttackSpeed, MoveSpeed, Armor, Critical, Regeneration, Harvesting }
-    public enum RunWeapon { Revolver, Repeater, Shotgun, Galaxy, Energy, Star }
+    // Append only: existing saves and power indices retain their identities.
+    public enum RunWeapon { Revolver, Repeater, Shotgun, Galaxy, Energy, Star, Blade, Spear, Railgun, Flame, Frost, Grenade, Axe, Hammer, Crossbow, BurstRifle, Ricochet, Boomerang, Saw, Mortar }
 
     public readonly struct StatBonus
     {
@@ -24,21 +25,13 @@ namespace WoollyArena
         { Id = id; Name = name; Price = price; Weapon = weapon; Bonuses = Array.Empty<StatBonus>(); }
         public RunItem(string id, string name, int price, params StatBonus[] bonuses)
         { Id = id; Name = name; Price = price; Bonuses = bonuses; }
-        public bool IsSpecial => Id=="deadeye"||Id=="capacitor";
-        public string SpecialText(int tier)=>Id=="deadeye"?"+"+(12*tier)+"% ateşli silah hasarı":Id=="capacitor"?"+"+(18*tier)+"% güç hasarı":"";
+        public bool IsSpecial => Id=="deadeye"||Id=="capacitor"||Id=="brawler"||Id=="cinder"||Id=="coolant"||Id=="payload";
+        public string SpecialText(int tier)=>Id=="deadeye"?"+"+(12*tier)+"% ateşli silah hasarı":Id=="capacitor"?"+"+(18*tier)+"% güç hasarı":Id=="brawler"?"+"+(18*tier)+"% yakın dövüş hasarı":Id=="cinder"?"+"+(20*tier)+"% yanma hasarı":Id=="coolant"?"+"+(4*tier)+"% yavaşlatma (en çok %45)":Id=="payload"?"+"+(6*tier)+"% alan yarıçapı (en çok %35)":"";
         public string Description(int tier)
         {
             if (IsWeapon)
             {
-                switch (Weapon.Value)
-                {
-                    case RunWeapon.Revolver: return "" + Mathf.RoundToInt(25 * TierScale(tier)) + " hasar · 0,40 sn";
-                    case RunWeapon.Repeater: return "" + Mathf.RoundToInt(10 * TierScale(tier)) + " hasar · 0,14 sn";
-                    case RunWeapon.Shotgun: return "3 × " + Mathf.RoundToInt(13 * TierScale(tier)) + " hasar · 0,65 sn";
-                    case RunWeapon.Galaxy: return "Alan hasarı";
-                    case RunWeapon.Energy: return "Zincirleme hasar";
-                    default: return "Ağır alan hasarı";
-                }
+                return WeaponArsenal.Description(Weapon.Value, tier);
             }
             string result = SpecialText(tier);
             foreach (var bonus in Bonuses) result += (result.Length > 0 ? "\n" : "") + StatText(bonus.Stat, bonus.Amount * tier);
@@ -57,6 +50,20 @@ namespace WoollyArena
             new RunItem("galaxy", "Girdap", 18, RunWeapon.Galaxy),
             new RunItem("energy", "Yıldırım", 18, RunWeapon.Energy),
             new RunItem("star", "Meteor", 18, RunWeapon.Star),
+            new RunItem("blade", "Hilal Kılıcı", 13, RunWeapon.Blade),
+            new RunItem("spear", "Diken Mızrak", 15, RunWeapon.Spear),
+            new RunItem("railgun", "Delici Tüfek", 22, RunWeapon.Railgun),
+            new RunItem("flame", "Alev Püskürtücü", 18, RunWeapon.Flame),
+            new RunItem("frost", "Buz Küresi", 18, RunWeapon.Frost),
+            new RunItem("grenade", "Bomba Atar", 20, RunWeapon.Grenade),
+            new RunItem("axe", "Yarma Baltası", 16, RunWeapon.Axe),
+            new RunItem("hammer", "Deprem Çekici", 21, RunWeapon.Hammer),
+            new RunItem("crossbow", "Zıpkın Arbalet", 17, RunWeapon.Crossbow),
+            new RunItem("burst", "Üçlü Karabina", 16, RunWeapon.BurstRifle),
+            new RunItem("ricochet", "Sekme Tabancası", 19, RunWeapon.Ricochet),
+            new RunItem("boomerang", "Dönüş Bıçağı", 18, RunWeapon.Boomerang),
+            new RunItem("saw", "Döner Testere", 17, RunWeapon.Saw),
+            new RunItem("mortar", "Kuşatma Havanı", 24, RunWeapon.Mortar),
             new RunItem("vest", "Yün Yelek", 10, new StatBonus(RunStat.MaxHealth, 12), new StatBonus(RunStat.Armor, 2), new StatBonus(RunStat.MoveSpeed, -3)),
             new RunItem("boots", "Çöl Botu", 10, new StatBonus(RunStat.MoveSpeed, 8)),
             new RunItem("scope", "Keskin Göz", 12, new StatBonus(RunStat.Critical, 7), new StatBonus(RunStat.AttackSpeed, -3)),
@@ -68,6 +75,10 @@ namespace WoollyArena
             new RunItem("fang", "Yaratık Dişi", 14, new StatBonus(RunStat.Damage, 10), new StatBonus(RunStat.Critical, 5), new StatBonus(RunStat.MaxHealth, -5)),
             new RunItem("deadeye", "Düellocu Rozeti", 22, new StatBonus(RunStat.AttackSpeed, -3)),
             new RunItem("capacitor", "Prizma Çekirdeği", 24, new StatBonus(RunStat.MaxHealth, -8)),
+            new RunItem("brawler", "Dövüşçü Sargısı", 19, new StatBonus(RunStat.Critical, -4)),
+            new RunItem("cinder", "Kor Yakıtı", 19, new StatBonus(RunStat.MoveSpeed, -3)),
+            new RunItem("coolant", "Buz Merceği", 18, new StatBonus(RunStat.Damage, -3)),
+            new RunItem("payload", "Şarapnel Kesesi", 20, new StatBonus(RunStat.AttackSpeed, -4)),
             new RunItem("sprout", "Filiz", 11, new StatBonus(RunStat.Regeneration, 2), new StatBonus(RunStat.Harvesting, 3))
         };
         public static RunItem Find(string id) => Array.Find(All, x => x.Id == id);
@@ -115,14 +126,15 @@ namespace WoollyArena
             random = new RunRandom(seed);
             Weapons.Add(new OwnedGear(RunCatalog.Find("revolver"), 1, 12));
         }
-        public int Stat(RunStat stat)
+        public int Stat(RunStat stat) => StatAfterBonus(stat, 0);
+        public int StatAfterBonus(RunStat stat, int extra)
         {
-            int amount = CharacterDefinition.BaseStat(CharacterId, stat) + CharacterDefinition.LevelGrowth(CharacterId,stat,Level) + bonuses[(int)stat];
+            int amount = CharacterDefinition.BaseStat(CharacterId, stat) + CharacterDefinition.LevelGrowth(CharacterId,stat,Level) + bonuses[(int)stat] + extra;
             foreach (var gear in Items) foreach (var bonus in gear.Item.Bonuses) if (bonus.Stat == stat) amount += bonus.Amount * gear.Tier;
             switch (stat)
             {
                 case RunStat.MaxHealth: return Mathf.Max(1, amount);
-                case RunStat.Armor: return Mathf.Clamp(amount, -20, 50);
+                case RunStat.Armor: return Mathf.Clamp(amount + FamilyArmor, -20, 50);
                 case RunStat.Critical: return Mathf.Clamp(amount, 0, 75);
                 case RunStat.AttackSpeed: return Mathf.Clamp(amount, -70, 300);
                 case RunStat.MoveSpeed: return Mathf.Clamp(amount, -50, 100);
@@ -131,10 +143,10 @@ namespace WoollyArena
             }
         }
         public float WeaponDamageMultiplier(RunWeapon weapon){
-            float bonus=0;foreach(var gear in Items){if(gear.Item.Id=="deadeye"&&(int)weapon<3)bonus+=.12f*gear.Tier;if(gear.Item.Id=="capacitor"&&(int)weapon>=3)bonus+=.18f*gear.Tier;}return 1+bonus;
+            float bonus=0;foreach(var gear in Items){if(gear.Item.Id=="deadeye"&&WeaponArsenal.IsFirearm(weapon))bonus+=.12f*gear.Tier;if(gear.Item.Id=="capacitor"&&WeaponArsenal.IsMagic(weapon))bonus+=.18f*gear.Tier;if(gear.Item.Id=="brawler"&&WeaponArsenal.Profile(weapon).Family==WeaponFamily.Brawler)bonus+=.18f*gear.Tier;}return 1+bonus;
         }
         public float DamageMultiplier => 1 + Stat(RunStat.Damage) / 100f;
-        public float AttackMultiplier => 1 + Stat(RunStat.AttackSpeed) / 100f;
+        public float AttackMultiplier => RunBalance.AttackMultiplier(Stat(RunStat.AttackSpeed));
         public float MoveMultiplier => 1 + Stat(RunStat.MoveSpeed) / 100f;
         public static float ArmorMultiplier(int armor) => armor >= 0 ? 1 / (1 + armor * .06f) : 1 - armor * .06f;
         public void AddMaterials(int amount) { Materials += Mathf.Max(0, amount); }

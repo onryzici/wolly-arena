@@ -13,6 +13,7 @@ namespace WoollyArena
         [Range(0, 30)] public float leanDegrees = 12f;
 
         public float impulseCooldown;
+        public bool SuppressImpulse { get; set; }
         public bool InterruptedLastHit { get; private set; }
         float nextImpulse;
         public bool Recoiling => motionTime < pushDuration;
@@ -57,7 +58,7 @@ namespace WoollyArena
             incoming.y = 0;
             direction = incoming.sqrMagnitude > .001f ? incoming.normalized : -visual.forward;
             // Refresh the impulse instead of stacking velocity during sustained fire.
-            InterruptedLastHit = Time.time >= nextImpulse;
+            InterruptedLastHit = !SuppressImpulse && Time.time >= nextImpulse;
             if (InterruptedLastHit) { motionTime = 0; nextImpulse = Time.time + impulseCooldown; }
             hitAt = Time.time;
             presenting = true;

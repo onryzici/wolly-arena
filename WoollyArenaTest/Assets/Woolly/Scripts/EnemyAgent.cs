@@ -5,11 +5,22 @@ namespace WoollyArena {
 public sealed class EnemyAgent:MonoBehaviour {
  public Transform visual,target;public Animator animator;public CharacterVitals vitals;public TMP_Text nameLabel,healthLabel;public RectTransform healthFill;public Canvas nameplate;public EnemySpawnDirector director;
  public float moveSpeed=2.35f,attackRange=6.5f,shotInterval=1.35f;public int shotDamage=125;public int CombatSlot{get;set;}
+ public EnemyRole Role {get;set;}
+ public int SquadId {get;set;}
+ public int SpawnSector {get;set;}=-1;
+ public Vector3 TacticalGoal {get;private set;}
  public float AimHeight { get; private set; } = .9f;
  public void UseSmallCreatureBody(){AimHeight=.65f;hitbox.height=1.1f;hitbox.center=Vector3.up*.55f;hitbox.radius=.25f;navigation.height=1.1f;navigation.radius=.38f;}
  public void HaltForWaveClear(){pendingShot=false;hitbox.enabled=false;if(navigation.enabled&&navigation.isOnNavMesh){navigation.isStopped=true;navigation.velocity=Vector3.zero;}animator.SetFloat("Speed",0);enabled=false;}
  public bool melee;
  public bool LaserRanged;
+ public bool IsElite {get;set;}
+ public readonly CombatAilments Ailments=new CombatAilments();
+ Renderer[] deathRenderers;
+ float lastVisibleHit=-100;
+ public void HideDefeatedBody(){if(deathRenderers==null)deathRenderers=visual.GetComponentsInChildren<Renderer>();foreach(var renderer in deathRenderers)if(renderer)renderer.enabled=false;}
+ public void Ignite(int damage){if(!Defeated)Ailments.Ignite(Time.time,damage);}
+ public void Chill(float strength){if(!Defeated)Ailments.Chill(Time.time,strength);}
  public bool IsBoss {get;private set;}
  public bool AttackWindup {get;set;}
  readonly MeleeStrike meleeStrike=new MeleeStrike();
@@ -29,13 +40,18 @@ public sealed class EnemyAgent:MonoBehaviour {
   hitReaction=gameObject.AddComponent<HitReaction>();visual=hitReaction.Initialize(visual,vitals,hitPushDistance);
   hitReaction.impulseCooldown=.45f;
  }
- public bool Damage(int amount,Vector3 direction=default,bool critical=false){
+ public bool Damage(int amount,Vector3 direction=default,bool critical=false,bool interrupt=true,bool periodic=false){
   int healthBefore=vitals.Health;
-  if(Defeated||(director&&director.Run&&director.Run.Phase!=SurvivalRun.RunPhase.Wave)||Time.time-born<.35f||!vitals.Damage(amount,direction))return false;
+  if(amount<=0||Defeated||(director&&director.Run&&director.Run.Phase!=SurvivalRun.RunPhase.Wave)||Time.time-born<.35f)return false;
+  hitReaction.SuppressImpulse=!interrupt;
+  if(!periodic&&director&&director.Run&&(IsBoss||IsElite))amount=RunBalance.ArmoredDamage(amount,director.Run.Wave,IsBoss,IsElite);
+  bool damaged=vitals.Damage(amount,direction);hitReaction.SuppressImpulse=false;
+  if(!damaged)return false;
+  lastVisibleHit=Time.time;
   if(director&&director.Run)director.Run.Rewards.Hit(transform.position,healthBefore-vitals.Health,critical,direction);
   if(hitReaction.InterruptedLastHit){pendingShot=false;meleeStrike.Cancel();settledAt=-1;nextShot=Mathf.Max(nextShot,Time.time+.22f);animator.ResetTrigger("Fire");
   if(navigation.enabled&&navigation.isOnNavMesh){navigation.isStopped=true;navigation.velocity=Vector3.zero;}}
-  if(vitals.Health==0){Defeated=true;if(director&&director.Run){director.Run.RegisterKill();director.Run.Rewards.Death(transform.position,direction);if(IsBoss)director.Run.Rewards.BossReward(transform.position);}hitbox.enabled=false;nameplate.enabled=false;deathAt=Time.time;}
+  if(vitals.Health==0){Defeated=true;Ailments.Clear();if(director&&director.Run){director.Run.RegisterKill();director.Run.Rewards.Death(transform.position,direction);director.Run.DeathFX.BreakApart(this,direction,critical);if(IsBoss)director.Run.Rewards.BossReward(transform.position);}hitbox.enabled=false;nameplate.enabled=false;deathAt=Time.time;}
   return true;
  }
  void MoveKnockback(){
@@ -61,8 +77,17 @@ public sealed class EnemyAgent:MonoBehaviour {
   if(!found&&NavMesh.SamplePosition(target.position,out var fallback,1,NavMesh.AllAreas)){combatGoal=fallback.position;found=true;}
   if(found){hasGoal=true;navigation.SetDestination(combatGoal);lastGoalTarget=target.position;}
  }
+ void ChooseTacticalGoal(bool sight){
+  nextPath=Time.time+.32f+(CombatSlot%7)*.035f;
+  var desired=EnemyTactics.Goal(Role,transform.position,target.position,director?director.PlayerVelocity:Vector3.zero,CombatSlot,sight);
+  if(!NavMesh.SamplePosition(desired,out var nav,1.2f,NavMesh.AllAreas)||!NavMesh.CalculatePath(transform.position,nav.position,NavMesh.AllAreas,candidatePath)||candidatePath.status!=NavMeshPathStatus.PathComplete){
+   if(!NavMesh.SamplePosition(target.position,out nav,1,NavMesh.AllAreas))return;
+  }
+  TacticalGoal=nav.position;navigation.SetDestination(TacticalGoal);
+ }
  void Update(){
   if(director&&director.Run&&director.Run.IsPaused)return;
+  if(!Defeated&&(!director||!director.Run||director.Run.Phase==SurvivalRun.RunPhase.Wave)){int burn=Ailments.TickBurn(Time.time);if(burn>0)Damage(burn,Vector3.zero,false,false,true);}
   if(Defeated){MoveKnockback();visual.localScale=baseScale*Mathf.Max(0,1-(Time.time-deathAt)/.22f);if(Time.time-deathAt>.25f)Destroy(gameObject);return;}
   float u=Mathf.Clamp01((Time.time-born)/.28f);visual.localScale=baseScale*Mathf.SmoothStep(.15f,1,u);
   if(u>=1&&!navigation.enabled&&NavMesh.SamplePosition(transform.position,out var point,1,NavMesh.AllAreas)){transform.position=point.position;if(director)navigation.agentTypeID=director.AgentTypeId;navigation.avoidancePriority=35+(CombatSlot%4)*12;navigation.enabled=true;hitbox.enabled=true;combatGoal=transform.position;}
@@ -70,9 +95,10 @@ public sealed class EnemyAgent:MonoBehaviour {
   bool recoiling=hitReaction.Recoiling;MoveKnockback();
   var delta=target.position-transform.position;delta.y=0;float distance=delta.magnitude;var direction=distance>.001f?delta/distance:visual.forward;bool alive=targetVitals&&targetVitals.Health>0;bool seesPlayer=alive&&SightFrom(transform.position+Vector3.up*1.05f);
   if(melee){
+   nameplate.enabled=IsBoss||IsElite||(vitals.Health<vitals.maxHealth*.5f&&Time.time-lastVisibleHit<1);
    nameLabel.text=vitals.displayName;
-   navigation.speed=moveSpeed;navigation.isStopped=recoiling||AttackWindup||MeleeAttackProgress>=0||!alive||distance<(LaserRanged&&seesPlayer?5.5f:IsBoss?1.35f:.9f);
-   if(alive&&!recoiling&&!AttackWindup&&Time.time>=nextPath){nextPath=Time.time+.25f+(CombatSlot%7)*.017f;navigation.SetDestination(target.position);}
+   navigation.speed=moveSpeed*(1-Ailments.Slow(Time.time,IsBoss));navigation.isStopped=recoiling||AttackWindup||MeleeAttackProgress>=0||!alive||(LaserRanged?seesPlayer&&distance>=4.2f&&distance<=7.2f:distance<(IsBoss?1.35f:.9f));
+   if(alive&&!recoiling&&!AttackWindup&&Time.time>=nextPath){ChooseTacticalGoal(seesPlayer);}
    if(direction.sqrMagnitude>.01f)visual.rotation=Quaternion.RotateTowards(visual.rotation,Quaternion.LookRotation(direction),360*Time.deltaTime);
    animator.SetFloat("Speed",navigation.velocity.magnitude,.12f,Time.deltaTime);animator.SetFloat("Playback",1);
    if(!recoiling&&!AttackWindup&&alive&&distance<(IsBoss?1.65f:1.2f)&&seesPlayer&&Time.time>=nextShot){nextShot=Time.time+.95f;meleeStrike.Begin(Time.time);}

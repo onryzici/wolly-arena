@@ -9,17 +9,25 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "WoollyArenaTest"
-SCRIPTING = Path("/Applications/Unity/Hub/Editor/6000.5.6f1/Unity.app/Contents/Resources/Scripting")
-DOTNET = SCRIPTING / "DotNetSdk/dotnet"
-CSC = SCRIPTING / "DotNetSdk/sdk/8.0.318/Roslyn/bincore/csc.dll"
+VERSION = re.search(r"m_EditorVersion: (\S+)", (PROJECT / "ProjectSettings/ProjectVersion.txt").read_text()).group(1)
+# Use the installed compiler only. This never invokes the Unity Editor executable.
+SCRIPTING = Path(os.environ.get("WOOLLY_UNITY_DATA", str(
+    Path(os.environ.get("ProgramFiles", "C:/Program Files")) / f"Unity/Hub/Editor/{VERSION}/Editor/Data"
+    if os.name == "nt" else Path(f"/Applications/Unity/Hub/Editor/{VERSION}/Unity.app/Contents/Resources/Scripting"))))
+DOTNET = SCRIPTING / ("DotNetSdk/dotnet.exe" if os.name == "nt" else "DotNetSdk/dotnet")
+COMPILERS = sorted((SCRIPTING / "DotNetSdk/sdk").glob("*/Roslyn/bincore/csc.dll"))
+if not DOTNET.exists() or not COMPILERS:
+    raise SystemExit("Unity's offline compiler was not found; set WOOLLY_UNITY_DATA to its data directory.")
+CSC = COMPILERS[-1]
 LOG = PROJECT / "Logs/equipment-offline-review.txt"
+LOG.parent.mkdir(parents=True, exist_ok=True)
 log = []
 
 def execute(args, cwd=PROJECT, env=None):
-    result = subprocess.run([str(x) for x in args], cwd=cwd, text=True, capture_output=True, env=env)
+    result = subprocess.run([str(x) for x in args], cwd=cwd, text=True, encoding="utf-8", errors="replace", capture_output=True, env=env)
     log.append(result.stdout + result.stderr)
     if result.returncode:
-        LOG.write_text("\n".join(log))
+        LOG.write_text("\n".join(log), encoding="utf-8")
         raise SystemExit(f"Failed ({result.returncode}); see {LOG}")
     return result.stdout
 
@@ -56,7 +64,7 @@ with tempfile.TemporaryDirectory(prefix="woolly-equipment-") as temporary:
     program = temp / "Program.cs"
     program.write_text('''using System;
 class Program {
- static int Main() { int checks=0; try {
+ static int Main() { Console.OutputEncoding=System.Text.Encoding.UTF8; int checks=0; try {
   WoollyArena.Editor.SurvivalBuildChecks.Run((ok, text) => { if (!ok) throw new Exception(text); checks++; Console.WriteLine("PASS " + text); });
   WoollyArena.Editor.RunCheckpointChecks.Run((ok, text) => { if (!ok) throw new Exception(text); checks++; Console.WriteLine("PASS " + text); });
   WoollyArena.Editor.WaveClearChecks.Run((ok, text) => { if (!ok) throw new Exception(text); checks++; Console.WriteLine("PASS " + text); });
@@ -67,6 +75,8 @@ class Program {
   WoollyArena.Editor.MeleeStrikeChecks.Run((ok, text) => { if (!ok) throw new Exception(text); checks++; Console.WriteLine("PASS " + text); });
   WoollyArena.Editor.CareerProgressChecks.Run((ok, text) => { if (!ok) throw new Exception(text); checks++; Console.WriteLine("PASS " + text); });
   WoollyArena.Editor.CombatAccentChecks.Run((ok, text) => { if (!ok) throw new Exception(text); checks++; Console.WriteLine("PASS " + text); });
+  WoollyArena.Editor.ArsenalChecks.Run((ok, text) => { if (!ok) throw new Exception(text); checks++; Console.WriteLine("PASS " + text); });
+  WoollyArena.Editor.SurvivorChecks.Run((ok, text) => { if (!ok) throw new Exception(text); checks++; Console.WriteLine("PASS " + text); });
   Console.WriteLine("ALL PASSED: " + checks + " model checks. No Unity Editor launched."); return 0;
  } catch(Exception e) { Console.WriteLine("FAIL " + e); return 1; } }
 }''')
@@ -75,6 +85,7 @@ class Program {
     lines = ["-target:exe", "-nologo", "-langversion:latest", f'-out:"{temp / "ModelChecks.dll"}"']
     lines.extend(f'-r:"{p}"' for p in refs)
     lines.append(f'-r:"{core}"')
+    lines.extend(f'"{PROJECT / "Assets/Woolly" / p}"' for p in ["Scripts/EnemyTactics.cs", "Tests/Editor/SurvivorChecks.cs", "Scripts/WeaponArsenal.cs", "Scripts/WeaponAttackCycle.cs", "Scripts/CombatAilments.cs", "Scripts/WavePressure.cs", "Scripts/RepeaterHeat.cs", "Tests/Editor/ArsenalChecks.cs"])
     lines.extend(f'"{p}"' for p in [PROJECT / "Assets/Woolly/Scripts/CombatAccentBudget.cs", PROJECT / "Assets/Woolly/Tests/Editor/CombatAccentChecks.cs", PROJECT / "Assets/Woolly/Scripts/CareerProgress.cs", PROJECT / "Assets/Woolly/Tests/Editor/CareerProgressChecks.cs", PROJECT / "Assets/Woolly/Scripts/MeleeStrike.cs", PROJECT / "Assets/Woolly/Tests/Editor/MeleeStrikeChecks.cs", PROJECT / "Assets/Woolly/Tests/Editor/BalanceChecks.cs", PROJECT / "Assets/Woolly/Tests/Editor/UpgradeSystemChecks.cs", PROJECT / "Assets/Woolly/Tests/Editor/CharacterDefinitionChecks.cs", PROJECT / "Assets/Woolly/Scripts/CharacterDefinition.cs", PROJECT / "Assets/Woolly/Scripts/RunBalance.cs", PROJECT / "Assets/Woolly/Scripts/WaveDifficulty.cs", PROJECT / "Assets/Woolly/Tests/Editor/ExpansionChecks.cs", PROJECT / "Assets/Woolly/Scripts/SurvivalBuild.cs", PROJECT / "Assets/Woolly/Scripts/WaveClearTimeline.cs", PROJECT / "Assets/Woolly/Tests/Editor/WaveClearChecks.cs", PROJECT / "Assets/Woolly/Scripts/RunCheckpoint.cs", PROJECT / "Assets/Woolly/Tests/Editor/SurvivalBuildChecks.cs", PROJECT / "Assets/Woolly/Tests/Editor/RunCheckpointChecks.cs", program])
     rsp = temp / "model.rsp"; rsp.write_text("\n".join(lines))
     execute([DOTNET, CSC, "@" + str(rsp)])
@@ -84,5 +95,5 @@ class Program {
     output = execute([DOTNET, temp / "ModelChecks.dll"], cwd=temp)
     print(output)
 log.append("NOT RUN: Unity scene/PlayMode, rendered UI, device build, audio or performance review.")
-LOG.write_text("\n".join(log))
+LOG.write_text("\n".join(log), encoding="utf-8")
 print(f"Report: {LOG}")

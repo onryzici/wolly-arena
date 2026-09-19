@@ -1,0 +1,50 @@
+﻿[
+    {
+        "license":  "CC0-1.0",
+        "sha256":  "195274FE1AB5383CF470E923498030E7A2B23FC0FB31E02526757F23410E9633",
+        "name":  "barrel_large_decorated",
+        "source":  "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/b0ca9bd96a8072ab36a3a5464f00ed1e06a16d07/addons/kaykit_dungeon_remastered/Assets/fbx/barrel_large_decorated.fbx"
+    },
+    {
+        "license":  "CC0-1.0",
+        "sha256":  "F361663EFC4660AB5E0875C611628EEBCB4D029B808950D57C53367348CAB3D1",
+        "name":  "box_stacked",
+        "source":  "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/b0ca9bd96a8072ab36a3a5464f00ed1e06a16d07/addons/kaykit_dungeon_remastered/Assets/fbx/box_stacked.fbx"
+    },
+    {
+        "license":  "CC0-1.0",
+        "sha256":  "9BA33C405D5FFD03E49327ABB3E52461D3912668C92DD71ECD2D7C871A56FE5D",
+        "name":  "keg_decorated",
+        "source":  "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/b0ca9bd96a8072ab36a3a5464f00ed1e06a16d07/addons/kaykit_dungeon_remastered/Assets/fbx/keg_decorated.fbx"
+    },
+    {
+        "license":  "CC0-1.0",
+        "sha256":  "E68BD19A1B709C2E85CCDFAF4D5FAAEAD04900F79DCB117CC35FADFFCC5E9AC0",
+        "name":  "sword_shield_broken",
+        "source":  "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/b0ca9bd96a8072ab36a3a5464f00ed1e06a16d07/addons/kaykit_dungeon_remastered/Assets/fbx/sword_shield_broken.fbx"
+    },
+    {
+        "license":  "CC0-1.0",
+        "sha256":  "62F8E2E542A7C566B163BA25F45C9AAB9CEF349B8BFF7851466C5379EF2E0C02",
+        "name":  "sword_shield_gold",
+        "source":  "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/b0ca9bd96a8072ab36a3a5464f00ed1e06a16d07/addons/kaykit_dungeon_remastered/Assets/fbx/sword_shield_gold.fbx"
+    },
+    {
+        "license":  "CC0-1.0",
+        "sha256":  "95E9539420308FA1FD4A4336A81CE994CD329E7B8FC048AFAB93A2A1027BADB6",
+        "name":  "rubble_large",
+        "source":  "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/b0ca9bd96a8072ab36a3a5464f00ed1e06a16d07/addons/kaykit_dungeon_remastered/Assets/fbx/rubble_large.fbx"
+    },
+    {
+        "license":  "CC0-1.0",
+        "sha256":  "BA688A8A460B943B7BB49C9EFC407CA5727E678DE1EACF9FE8F6CF1599A8EC96",
+        "name":  "coin_stack_large",
+        "source":  "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/b0ca9bd96a8072ab36a3a5464f00ed1e06a16d07/addons/kaykit_dungeon_remastered/Assets/fbx/coin_stack_large.fbx"
+    },
+    {
+        "license":  "CC0-1.0",
+        "sha256":  "692F4F430A0D632D125755A0976A911DDCC46DE07FA3A257FF57CA3C1D44E27B",
+        "name":  "bottle_A_green",
+        "source":  "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/b0ca9bd96a8072ab36a3a5464f00ed1e06a16d07/addons/kaykit_dungeon_remastered/Assets/fbx/bottle_A_green.fbx"
+    }
+]

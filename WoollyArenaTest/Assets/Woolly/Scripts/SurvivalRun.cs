@@ -22,8 +22,9 @@ namespace WoollyArena
         public CombatRewards Rewards { get; private set; }
         public CombatAudio Sfx { get; private set; }
         public ArenaActionFX ActionFX { get; private set; }
+        public EnemyDeathVFX DeathFX { get; private set; }
         public int EnemyLimit => WaveDifficulty.EnemyLimit(Wave);
-        public int SpawnBurst => Mathf.Min(6, 3 + (Wave - 1) / 4);
+        public int SpawnBurst => SquadRules.Size(Wave);
         public float SpawnInterval => WaveDifficulty.SpawnInterval(Wave);
         public int LastHarvest { get; private set; }
         public ArenaPlayer Player { get; private set; }
@@ -38,8 +39,9 @@ namespace WoollyArena
         public int WaveGold=>Rewards.GoldCollected-goldAtWaveStart;
         public float ClearProgress=>clearTimeline.Progress;
         EnemySpawnDirector director;
+        public EnemySpawnDirector Director => director;
         CharacterVitals vitals;
-        float nextSpawn, previousTimeScale = 1;
+        float nextSpawn, nextAssault, previousTimeScale = 1;
         public bool IsPaused { get; private set; }
         public string SaveError { get; private set; }
         public bool WasRestored { get; private set; }
@@ -58,6 +60,7 @@ namespace WoollyArena
             Player.Stats = hero.gameObject.AddComponent<CharacterStats>(); Player.Stats.Initialize(Build, Player, this);
             Sfx=gameObject.AddComponent<CombatAudio>();Sfx.Initialize(this);
             ActionFX=gameObject.AddComponent<ArenaActionFX>();ActionFX.Initialize(this);
+            DeathFX=gameObject.AddComponent<EnemyDeathVFX>();DeathFX.Initialize(this);
             Rewards = gameObject.AddComponent<CombatRewards>(); Rewards.Initialize(this);
             Powers = gameObject.AddComponent<SurvivalPowers>(); Powers.Initialize(Player, director, this);
             Player.Loadout = gameObject.AddComponent<LoadoutCombat>(); Player.Loadout.Initialize(this, Player);
@@ -75,12 +78,14 @@ namespace WoollyArena
         }
         void BeginWave()
         {
+            director.CancelSquads();
             bossSpawned=false;Boss=null;nextBossAttempt=0;
             killsAtWaveStart=Kills;goldAtWaveStart=Rewards.GoldCollected;
             Player.Stats.Apply();vitals.Heal(vitals.maxHealth);
             ActionFX.Cue(3);ActionFX.Burst(Player.transform.position+Vector3.up*.6f,new Color(.35f,1,.75f),24);
             Player.weapon.Refill(); Phase = RunPhase.Wave;
             Remaining = CurrentWaveDuration; nextSpawn = Time.time + SpawnInterval;
+            nextAssault=Time.time+WavePressure.AssaultInterval(Wave);
             Player.CombatPaused = false; vitals.ProtectFor(1); ResetTouch(); ShopUI.Refresh(); SaveCheckpoint();
             TrySpawnBoss();SpawnGroup(Mathf.Min(EnemyLimit, 6 + Wave));
         }
@@ -107,6 +112,10 @@ namespace WoollyArena
                     SpawnGroup(SpawnBurst);
                     nextSpawn = Time.time + SpawnInterval;
                 }
+                if(Time.time>=nextAssault){
+                    SpawnGroup(WavePressure.AssaultSize(Wave));nextAssault=Time.time+WavePressure.AssaultInterval(Wave);
+                    Rewards.Popup(Player.transform.position,"TAKVİYE DALGASI",new Color(1,.5f,.2f),1,1);
+                }
             }
             if(Phase==RunPhase.WaveClear){
                 clearTimeline.Advance(Time.deltaTime,false);
@@ -118,8 +127,9 @@ namespace WoollyArena
             ShopUI.UpdateHeader();
         }
         void BeginWaveClear(){
+            director.CancelSquads();
             Phase=RunPhase.WaveClear;Remaining=0;clearTimeline.Reset();sweptEnemies=0;
-            Player.CombatPaused=true;vitals.ProtectFor(WaveClearTimeline.Duration+1);Powers.Cancel();ResetTouch();
+            Player.CombatPaused=true;vitals.ProtectFor(WaveClearTimeline.Duration+1);Powers.Cancel();Player.Loadout.CancelAttacks();ResetTouch();
             foreach(var enemy in director.Enemies)if(enemy)enemy.HaltForWaveClear();
             Rewards.BeginVictorySweep();ShopUI.Refresh();ShopUI.UpdateWaveClear(0);
         }
@@ -130,8 +140,7 @@ namespace WoollyArena
         }
         void SpawnGroup(int count)
         {
-            for (int i = 0; i < count && director.Enemies.Count < EnemyLimit; i++)
-                if (!director.Spawn()) break;
+            director.QueueSquads(count);
         }
         public void RegisterKill()
         {
@@ -143,7 +152,8 @@ namespace WoollyArena
         {
             Rewards.FinishWave(phase == RunPhase.Upgrade || phase == RunPhase.Victory);
             if(CheckpointsEnabled){var career=CareerStore.Load();career.Record(phase==RunPhase.Defeat?Wave-1:Wave,Kills,Build.Level,Build.Weapons.Count,phase==RunPhase.Victory);CareerStore.Save(career);}
-            Phase = phase; Player.CombatPaused = true; Powers.Cancel(); ResetTouch();
+            director.CancelSquads();
+            Phase = phase; Player.CombatPaused = true; Powers.Cancel(); Player.Loadout.CancelAttacks(); ResetTouch();
             foreach (var enemy in director.Enemies) if (enemy) { enemy.gameObject.SetActive(false); Destroy(enemy.gameObject); }
             director.Enemies.Clear();
             if (phase == RunPhase.Upgrade)
